@@ -1,0 +1,3 @@
+#!/bin/sh
+# Run linters/formatters on staged files
+npx lint-staged
