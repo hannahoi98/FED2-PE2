@@ -3,7 +3,11 @@ import { COLORS } from "../theme";
 
 export default function Header() {
   return (
-    <AppBar elevation={0} sx={{ bgcolor: COLORS.pine, color: COLORS.page }}>
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{ bgcolor: COLORS.pine, color: COLORS.page }}
+    >
       <Toolbar sx={{ gap: 2, px: 4, py: 4 }}>
         <Typography
           component="h1"
