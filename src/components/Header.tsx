@@ -1,5 +1,6 @@
 import { AppBar, Typography, Toolbar, Box, Button } from "@mui/material";
 import { COLORS } from "../theme";
+import { FONTS } from "../theme";
 
 export default function Header() {
   return (
@@ -13,7 +14,7 @@ export default function Header() {
           component="h1"
           variant="h3"
           sx={{
-            fontFamily: '"Neonderthaw", cursive',
+            fontFamily: FONTS.logo,
             mr: "auto",
             lineHeight: 1,
           }}
