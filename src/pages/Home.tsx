@@ -1,5 +1,6 @@
 import { Divider, Stack, Typography } from "@mui/material";
 import { COLORS } from "../theme";
+import AllVenuesGrid from "../components/AllVenuesGrid";
 
 export default function Home() {
   return (
@@ -26,6 +27,7 @@ export default function Home() {
           width: "100%",
         }}
       />
+      <AllVenuesGrid />
     </Stack>
   );
 }
