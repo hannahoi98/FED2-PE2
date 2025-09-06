@@ -10,26 +10,17 @@ export default function Home() {
         maxWidth="280px"
         sx={{
           color: COLORS.pop,
-          fontFamily: '"DM Serif Display", serif',
         }}
       >
         Welcome to Holidaze - Your best choice to host or book unforgettable
         stays.
       </Typography>
 
-      <Typography
-        component="h2"
-        variant="h4"
-        sx={{
-          fontFamily: '"DM Serif Display", serif',
-          color: COLORS.pine,
-        }}
-      >
+      <Typography component="h2" variant="h4">
         All Venues
       </Typography>
       <Divider
         sx={{
-          borderColor: COLORS.mint,
           opacity: 1,
           borderBottomWidth: 2,
           width: "100%",

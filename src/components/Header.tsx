@@ -28,7 +28,6 @@ export default function Header() {
             href="#/venues"
             sx={{
               fontSize: "1.15rem",
-              fontFamily: '"DM Serif Display", serif',
               textTransform: "none",
               "&:hover": {
                 color: COLORS.mint,
@@ -44,7 +43,6 @@ export default function Header() {
             href="#/venues"
             sx={{
               fontSize: "1.15rem",
-              fontFamily: '"DM Serif Display", serif',
               textTransform: "none",
               "&:hover": {
                 color: COLORS.mint,
@@ -60,7 +58,6 @@ export default function Header() {
             href="#/venues"
             sx={{
               fontSize: "1.15rem",
-              fontFamily: '"DM Serif Display", serif',
               textTransform: "none",
               "&:hover": {
                 color: COLORS.mint,

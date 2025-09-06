@@ -1,5 +1,11 @@
 import { createTheme } from "@mui/material/styles";
 
+export const FONTS = {
+  serif: '"DM Serif Display", serif',
+  sans: '"DM Sans", system-ui, Arial, sans-serif',
+  logo: '"Neonderthaw", cursive',
+};
+
 // Colors
 export const COLORS = {
   pine: "#093F3B",
@@ -35,9 +41,7 @@ const theme = createTheme({
     divider: COLORS.mint,
   },
   typography: {
-    fontFamily: ['"DM Sans"', "system-ui", "Arial", "sans-serif"].join(","),
-    h1: { fontFamily: '"DM Serif Display", serif' },
-    h2: { fontFamily: '"DM Serif Display", serif' },
+    fontFamily: FONTS.serif,
   },
   components: {
     MuiCssBaseline: {
@@ -45,6 +49,7 @@ const theme = createTheme({
         body: {
           backgroundColor: COLORS.page,
           color: COLORS.pine,
+          fontFamily: FONTS.serif,
         },
         a: { color: COLORS.pine },
       },
@@ -54,6 +59,7 @@ const theme = createTheme({
         root: {
           textTransform: "none",
           borderRadius: 10,
+          fontFamily: FONTS.serif,
         },
       },
       variants: [

@@ -12,9 +12,7 @@ export default function Footer() {
         mt: "auto",
       }}
     >
-      <Typography sx={{ fontFamily: '"DM Serif Display", serif' }}>
-        Placeholder footer
-      </Typography>
+      <Typography>Placeholder footer</Typography>
     </Box>
   );
 }
