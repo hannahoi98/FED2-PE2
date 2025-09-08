@@ -1,6 +1,14 @@
 import type { Venue } from "../types/venue";
-import { Card, CardContent, CardMedia, Stack, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Divider,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Rating from "@mui/material/Rating";
+import { COLORS, FONTS } from "../theme";
 
 type Props = { venue: Venue };
 
@@ -18,24 +26,54 @@ export default function VenueCard({ venue }: Props) {
         component="img"
         image={firstImage}
         alt={firstAlt}
-        sx={{ height: 200, objectFit: "cover" }}
+        sx={{
+          aspectRatio: "16/9",
+          width: "100%",
+          height: "auto",
+          objectFit: "cover",
+        }}
       />
 
       <CardContent>
-        <Stack>
-          <Typography>{venue.name}</Typography>
-          <Typography>{place}</Typography>
-          <Stack direction="row">
-            <Rating
-              value={venue.rating ?? 0}
-              precision={0.5}
-              readOnly
-              size="small"
+        <Stack spacing={0.5} alignItems="center">
+          <Typography component="h3" variant="h6">
+            {venue.name}
+          </Typography>
+          <Typography sx={{ fontFamily: FONTS.sans }}>{place}</Typography>
+          <Stack direction="row" spacing={1}>
+            {venue.rating > 0 ? (
+              <>
+                <Rating
+                  value={venue.rating}
+                  precision={0.5}
+                  readOnly
+                  size="small"
+                  sx={{
+                    "& .MuiRating-iconFilled": { color: COLORS.pine },
+                    "& .MuiRating-iconEmpty": { color: "rgba(9,63,59,0.3)" },
+                  }}
+                />
+                <Typography sx={{ fontFamily: FONTS.sans }}>
+                  {venue.rating.toFixed(1)}
+                </Typography>
+              </>
+            ) : (
+              <Typography sx={{ fontFamily: FONTS.sans }}>
+                No ratings yet
+              </Typography>
+            )}
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ mx: 1, borderColor: COLORS.mint, opacity: 1 }}
             />
-            <Typography>{venue.rating?.toFixed?.(1) ?? "0.0"}</Typography>
-            <Typography>{venue.maxGuests} guests</Typography>
+            <Typography sx={{ fontFamily: FONTS.sans }}>
+              {venue.maxGuests} Guests
+            </Typography>
           </Stack>
-          <Typography>{venue.price} kr / night</Typography>
+          <Typography sx={{ fontFamily: FONTS.sans }}>
+            {venue.price} kr / night
+          </Typography>
         </Stack>
       </CardContent>
     </Card>

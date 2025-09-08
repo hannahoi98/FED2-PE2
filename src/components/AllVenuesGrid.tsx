@@ -11,11 +11,8 @@ function hasImage(v: Venue) {
   return Array.isArray(v.media) && v.media.some((m) => m?.url?.trim());
 }
 
-const getTimestamp = (v: Venue) => {
-  const c = v.created ?? v.created ?? "";
-  const u = v.updated ?? v.updated ?? "";
-  return Date.parse(c) || Date.parse(u) || 0;
-};
+const getTimestamp = (v: Venue) =>
+  Date.parse(v.created ?? "") || Date.parse(v.updated ?? "") || 0;
 
 export default function AllVenuesGrid() {
   const [allVenues, setAllVenues] = useState<Venue[]>([]);
