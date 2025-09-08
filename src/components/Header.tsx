@@ -9,24 +9,30 @@ export default function Header() {
       elevation={0}
       sx={{ bgcolor: COLORS.pine, color: COLORS.page }}
     >
-      <Toolbar sx={{ gap: 2, px: 4, py: 4 }}>
+      <Toolbar
+        sx={{
+          gap: 2,
+          px: { xs: 2, md: 4 },
+          py: { xs: 2, md: 4 },
+        }}
+      >
         <Typography
           component="h1"
-          variant="h3"
           sx={{
             fontFamily: FONTS.logo,
             mr: "auto",
             lineHeight: 1,
+            fontSize: { xs: "2.2rem", md: "3rem" },
           }}
         >
           Holidaze
         </Typography>
-        <Box sx={{ display: "flex", gap: 1.5 }}>
+        <Box sx={{ display: { xs: "none", md: "flex" }, gap: 1.5 }}>
           <Button
             variant="text"
             color="inherit"
             component="a"
-            href="#/venues"
+            href="/"
             sx={{
               fontSize: "1.15rem",
               textTransform: "none",
@@ -41,7 +47,7 @@ export default function Header() {
             variant="text"
             color="inherit"
             component="a"
-            href="#/venues"
+            href="/auth/register"
             sx={{
               fontSize: "1.15rem",
               textTransform: "none",
@@ -56,7 +62,7 @@ export default function Header() {
             variant="text"
             color="inherit"
             component="a"
-            href="#/venues"
+            href="/auth/login"
             sx={{
               fontSize: "1.15rem",
               textTransform: "none",
