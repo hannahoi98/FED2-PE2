@@ -1,13 +1,14 @@
 import { Box, BottomNavigation, BottomNavigationAction } from "@mui/material";
-import { TravelExploreOutlined } from "@mui/icons-material";
-import { PersonAddOutlined } from "@mui/icons-material";
-import { PersonOutline } from "@mui/icons-material";
+import { TravelExploreSharp } from "@mui/icons-material";
+import { PersonAddSharp } from "@mui/icons-material";
+import { PersonSharp } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
+import { COLORS } from "../theme";
 
 const ITEMS = [
-  { label: "Browse", to: "/", icon: <TravelExploreOutlined /> },
-  { label: "Register", to: "/auth/register", icon: <PersonAddOutlined /> },
-  { label: "Login", to: "/auth/login", icon: <PersonOutline /> },
+  { label: "Browse", to: "/", icon: <TravelExploreSharp /> },
+  { label: "Register", to: "/auth/register", icon: <PersonAddSharp /> },
+  { label: "Login", to: "/auth/login", icon: <PersonSharp /> },
 ];
 
 export default function BottomNav() {
@@ -34,6 +35,16 @@ export default function BottomNav() {
         value={value}
         onChange={(_, newVal) => navigate(ITEMS[newVal].to)}
         showLabels
+        sx={{
+          bgcolor: COLORS.pine,
+          color: COLORS.page,
+          pb: "env(safe-area-inset-bottom)",
+          "& .MuiBottomNavigationAction-root": {
+            color: COLORS.page,
+            fontFamily: '"DM Serif Display", serif',
+            "&.Mui-selected": { color: COLORS.mint },
+          },
+        }}
       >
         {ITEMS.map((it) => (
           <BottomNavigationAction
