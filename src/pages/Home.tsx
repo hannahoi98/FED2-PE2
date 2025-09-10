@@ -1,8 +1,13 @@
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import { COLORS } from "../theme";
 import AllVenuesGrid from "../components/AllVenuesGrid";
+import { useState } from "react";
+import SearchBar from "../components/SearchBar";
 
 export default function Home() {
+  const [searchText, setSearchText] = useState("");
+  const [activeQuery, setActiveQuery] = useState("");
+
   return (
     <Stack spacing={1}>
       <Box sx={{ display: "grid", placeItems: "center" }}>
@@ -18,10 +23,26 @@ export default function Home() {
           stays.
         </Typography>
       </Box>
-
-      <Typography component="h2" variant="h4">
-        All Venues
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography component="h2" variant="h4">
+          All Venues
+        </Typography>
+        <SearchBar
+          value={searchText}
+          onChange={setSearchText}
+          onActiveQueryChange={setActiveQuery}
+          width={320}
+          delay={350}
+          minLength={3}
+        />
+      </Box>
       <Divider
         sx={{
           opacity: 1,
@@ -29,7 +50,7 @@ export default function Home() {
           width: "100%",
         }}
       />
-      <AllVenuesGrid />
+      <AllVenuesGrid query={activeQuery} />
     </Stack>
   );
 }
