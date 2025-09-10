@@ -1,4 +1,4 @@
-import { ALL_VENUES_URL } from "../api/endpoints";
+import { ALL_VENUES_URL, SEARCH_VENUES_URL } from "../api/endpoints";
 import type { Venue, VenueListResponse } from "../types/venue";
 import VenueCard from "./VenueCard";
 import Loader from "./Loader";
@@ -14,7 +14,11 @@ function hasImage(v: Venue) {
 const getTimestamp = (v: Venue) =>
   Date.parse(v.created ?? "") || Date.parse(v.updated ?? "") || 0;
 
-export default function AllVenuesGrid() {
+type Props = {
+  query?: string;
+};
+
+export default function AllVenuesGrid({ query = "" }: Props) {
   const [allVenues, setAllVenues] = useState<Venue[]>([]);
   const [visibleCount, setVisibleCount] = useState(PER_PAGE);
   const [loading, setLoading] = useState(true);
@@ -77,11 +81,52 @@ export default function AllVenuesGrid() {
       }
     };
 
-    fetchAllPages();
+    const fetchSearch = async (q: string): Promise<void> => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const url = new URL(SEARCH_VENUES_URL);
+        url.searchParams.set("q", q);
+        url.searchParams.set("page", "1");
+        url.searchParams.set("limit", String(PER_PAGE));
+
+        const res = await fetch(url.toString());
+        if (!res.ok) throw new Error(`Search failed (${res.status})`);
+
+        const json: VenueListResponse = await res.json();
+        const withImages = (json.data ?? []).filter(hasImage);
+        const sorted = withImages.sort(
+          (a, b) => getTimestamp(b) - getTimestamp(a),
+        );
+
+        if (!cancelled) {
+          setAllVenues(sorted);
+          setVisibleCount(PER_PAGE);
+        }
+      } catch (e: unknown) {
+        if (!cancelled) {
+          const message =
+            e instanceof Error
+              ? e.message
+              : "Something went wrong while searching";
+          setError(message);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    const run = async () => {
+      if (query) await fetchSearch(query);
+      else await fetchAllPages();
+    };
+
+    run();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [query]);
 
   if (loading) return <Loader message="Loading venues…" />;
   if (error) return <Alert severity="error">{error}</Alert>;
@@ -89,7 +134,7 @@ export default function AllVenuesGrid() {
     return <Alert severity="info">No venues with photos yet.</Alert>;
 
   const visible = allVenues.slice(0, visibleCount);
-  const hasMore = visibleCount < allVenues.length;
+  const hasMore = !query && visibleCount < allVenues.length;
 
   return (
     <Stack>
