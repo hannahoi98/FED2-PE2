@@ -1,5 +1,6 @@
 import type { Venue } from "../types/venue";
 import {
+  Button,
   Card,
   CardContent,
   CardMedia,
@@ -9,6 +10,7 @@ import {
 } from "@mui/material";
 import Rating from "@mui/material/Rating";
 import { COLORS, FONTS } from "../theme";
+import { Link as RouterLink } from "react-router-dom";
 
 type Props = { venue: Venue };
 
@@ -74,6 +76,15 @@ export default function VenueCard({ venue }: Props) {
           <Typography sx={{ fontFamily: FONTS.sans }}>
             {venue.price} kr / night
           </Typography>
+          <Button
+            component={RouterLink}
+            to={`/venues/${venue.id}`}
+            variant="elevated"
+            color="mint"
+            sx={{ mt: 1 }}
+          >
+            View venue
+          </Button>
         </Stack>
       </CardContent>
     </Card>
