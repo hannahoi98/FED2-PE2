@@ -153,10 +153,10 @@ export default function AllVenuesGrid({ query = "" }: Props) {
           </Box>
         ))}
       </Box>
-      <Box sx={{ display: "grid", placeItems: "center", pt: 1 }}>
+      <Box sx={{ display: "grid", placeItems: "center", pt: 2 }}>
         <Button
           variant="elevated"
-          color="mint"
+          color="pine"
           onClick={() => setVisibleCount((n) => n + PER_PAGE)}
           disabled={!hasMore}
         >

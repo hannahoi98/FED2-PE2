@@ -5,22 +5,38 @@ import {
   CardContent,
   CardMedia,
   Divider,
-  Stack,
   Typography,
+  Stack,
+  Rating,
 } from "@mui/material";
-import Rating from "@mui/material/Rating";
+import { useNavigate } from "react-router-dom";
 import { COLORS, FONTS } from "../theme";
-import { Link as RouterLink } from "react-router-dom";
 
-type Props = { venue: Venue };
+type Props = {
+  venue: Venue;
+  isAuthenticated?: boolean;
+};
 
-export default function VenueCard({ venue }: Props) {
+export default function SingleVenueCard({
+  venue,
+  isAuthenticated = false,
+}: Props) {
+  const navigate = useNavigate();
+
   const firstImage = venue.media?.[0]?.url ?? " ";
-  const firstAlt = venue.media?.[0]!.alt ?? venue.name;
+  const firstAlt = venue.media?.[0]?.alt ?? venue.name;
 
-  const city = venue.location?.city;
-  const country = venue.location?.country;
-  const place = [city, country].filter(Boolean).join(", ");
+  const place = [venue.location?.city, venue.location?.country]
+    .filter(Boolean)
+    .join(", ");
+
+  const onBook = () => {
+    if (isAuthenticated) {
+      navigate(`/venues/${venue.id}/book`);
+    } else {
+      navigate(`/auth/login?redirect=/venues/${venue.id}`);
+    }
+  };
 
   return (
     <Card>
@@ -37,12 +53,18 @@ export default function VenueCard({ venue }: Props) {
       />
 
       <CardContent>
-        <Stack spacing={0.5} alignItems="center">
-          <Typography component="h3" variant="h6">
+        <Stack alignItems="center">
+          <Typography component="h1" variant="h4">
             {venue.name}
           </Typography>
-          <Typography sx={{ fontFamily: FONTS.sans }}>{place}</Typography>
-          <Stack direction="row" spacing={1}>
+
+          {place && (
+            <Typography variant="body2" sx={{ opacity: 0.75 }}>
+              {place}
+            </Typography>
+          )}
+
+          <Stack direction="row" spacing={1} alignItems="center">
             {venue.rating > 0 ? (
               <>
                 <Rating
@@ -64,27 +86,34 @@ export default function VenueCard({ venue }: Props) {
                 No ratings yet
               </Typography>
             )}
+
             <Divider
               orientation="vertical"
               flexItem
               sx={{ mx: 1, borderColor: COLORS.mint, opacity: 1 }}
             />
+
             <Typography sx={{ fontFamily: FONTS.sans }}>
               {venue.maxGuests} Guests
             </Typography>
           </Stack>
-          <Typography sx={{ fontFamily: FONTS.sans }}>
-            {venue.price} kr / night
-          </Typography>
-          <Button
-            component={RouterLink}
-            to={`/venues/${venue.id}`}
-            variant="elevated"
-            color="mint"
-            sx={{ mt: 1 }}
-          >
-            View venue
-          </Button>
+
+          {venue.description && (
+            <Card elevation={0}>
+              <CardContent>
+                <Typography variant="h6" sx={{ mb: 1 }}>
+                  About this venue
+                </Typography>
+                <Typography sx={{ fontFamily: FONTS.sans }}>
+                  {venue.description}
+                </Typography>
+
+                <Button variant="elevated" color="mint" onClick={onBook}>
+                  Book this venue
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </Stack>
       </CardContent>
     </Card>
