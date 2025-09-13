@@ -5,3 +5,5 @@ export const SEARCH_VENUES_URL = `${BASE_API_URL}/holidaze/venues/search`;
 
 export const SINGLE_VENUE_URL = (id: string) =>
   `${BASE_API_URL}/holidaze/venues/${id}`;
+
+export const REGISTER_URL = `${BASE_API_URL}/auth/register`;
