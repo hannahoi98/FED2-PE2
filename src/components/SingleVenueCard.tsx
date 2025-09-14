@@ -11,6 +11,9 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { COLORS, FONTS } from "../theme";
+import { Dayjs } from "dayjs";
+import AvailabilityPicker from "./AvailabilityPicker";
+import { useState } from "react";
 
 type Props = {
   venue: Venue;
@@ -29,6 +32,10 @@ export default function SingleVenueCard({
   const place = [venue.location?.city, venue.location?.country]
     .filter(Boolean)
     .join(", ");
+
+  const [checkIn, setCheckIn] = useState<Dayjs | null>(null);
+  const [checkOut, setCheckOut] = useState<Dayjs | null>(null);
+  const canBook = Boolean(checkIn && checkOut);
 
   const onBook = () => {
     if (isAuthenticated) {
@@ -107,13 +114,33 @@ export default function SingleVenueCard({
                 <Typography sx={{ fontFamily: FONTS.sans }}>
                   {venue.description}
                 </Typography>
-
-                <Button variant="elevated" color="mint" onClick={onBook}>
-                  Book this venue
-                </Button>
               </CardContent>
             </Card>
           )}
+          <Card elevation={0}>
+            <CardContent>
+              <Typography variant="h6" sx={{ mb: 1 }}>
+                Pick Your Dates
+              </Typography>
+              <AvailabilityPicker
+                bookings={venue.bookings}
+                checkIn={checkIn}
+                checkOut={checkOut}
+                onChange={({ checkIn, checkOut }) => {
+                  setCheckIn(checkIn);
+                  setCheckOut(checkOut);
+                }}
+              />
+              <Button
+                variant="elevated"
+                color="mint"
+                onClick={onBook}
+                disabled={!canBook}
+              >
+                {canBook ? "Book this venue" : "Select dates to book"}
+              </Button>
+            </CardContent>
+          </Card>
         </Stack>
       </CardContent>
     </Card>
