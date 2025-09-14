@@ -35,6 +35,7 @@ const theme = createTheme({
       default: COLORS.page,
       paper: COLORS.white,
     },
+    error: { main: COLORS.pop },
     text: {
       primary: COLORS.pine,
     },
@@ -54,6 +55,70 @@ const theme = createTheme({
         a: { color: COLORS.pine },
       },
     },
+    MuiRadio: {
+      styleOverrides: {
+        root: {
+          color: COLORS.pine,
+          "&.Mui-checked": { color: COLORS.pine },
+        },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: "outlined",
+        fullWidth: true,
+        slotProps: {
+          inputLabel: { shrink: true },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontSize: 19,
+          color: COLORS.pine,
+          backgroundColor: COLORS.mint,
+          padding: "0 6px",
+          borderRadius: 5,
+          "&.Mui-error": { color: COLORS.pine },
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          fontFamily: '"DM Sans", system-ui, Arial, sans-serif',
+        },
+      },
+    },
+
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          backgroundColor: COLORS.white,
+          "& fieldset": { borderColor: COLORS.pine },
+          "&:hover fieldset": { borderColor: COLORS.pine },
+          "&.Mui-focused fieldset": {
+            borderColor: COLORS.pine,
+            borderWidth: 2,
+          },
+        },
+        input: {
+          "&::placeholder": { opacity: 1, color: "rgba(9, 63, 59, 0.6)" },
+        },
+      },
+    },
+
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          marginLeft: 0,
+          fontFamily: '"DM Sans", system-ui, Arial, sans-serif',
+          color: COLORS.pine,
+        },
+      },
+    },
+
     MuiButton: {
       styleOverrides: {
         root: {
@@ -62,6 +127,7 @@ const theme = createTheme({
           fontFamily: FONTS.serif,
         },
       },
+
       variants: [
         {
           props: { variant: "elevated", color: "mint" },
