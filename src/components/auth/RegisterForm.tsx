@@ -19,6 +19,8 @@ import {
   RadioGroup,
 } from "@mui/material";
 
+import { COLORS, FONTS } from "../../theme";
+
 type FormState = {
   name: string;
   email: string;
@@ -94,7 +96,7 @@ export default function RegisterForm({
 
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
-      <Stack spacing={3}>
+      <Stack spacing={3} sx={{ fontFamily: FONTS.sans }}>
         {serverError && <Alert severity="error">{serverError}</Alert>}
         {serverSuccess && <Alert severity="success">{serverSuccess}</Alert>}
 
@@ -124,7 +126,7 @@ export default function RegisterForm({
             setErrors((e) => ({ ...e, email: validateEmail(form.email) }))
           }
           error={Boolean(errors.email)}
-          helperText={errors.email || "Use your stud.noroff.no email"}
+          helperText={errors.email || "Use a stud.noroff.no email"}
           autoComplete="email"
           required
           fullWidth
@@ -144,16 +146,21 @@ export default function RegisterForm({
           }
           error={Boolean(errors.password)}
           helperText={
-            errors.password || "Min 8 chars, include a letter + a number"
+            errors.password ||
+            "Must contain a letter, a number and at least 8 characters"
           }
           autoComplete="new-password"
           required
           fullWidth
         />
-        <FormControl required>
-          <FormLabel id="role-label">Sign Up As:</FormLabel>
+        <FormControl required sx={{ alignSelf: "center" }}>
+          <FormLabel
+            id="role-label"
+            sx={{ fontFamily: FONTS.sans, color: COLORS.pine }}
+          >
+            Sign Up As
+          </FormLabel>
           <RadioGroup
-            row
             aria-labelledby="role-label"
             name="role"
             value={form.role}

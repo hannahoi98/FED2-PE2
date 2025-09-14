@@ -35,6 +35,7 @@ const theme = createTheme({
       default: COLORS.page,
       paper: COLORS.white,
     },
+    error: { main: COLORS.pop },
     text: {
       primary: COLORS.pine,
     },
@@ -54,6 +55,14 @@ const theme = createTheme({
         a: { color: COLORS.pine },
       },
     },
+    MuiRadio: {
+      styleOverrides: {
+        root: {
+          color: COLORS.pine,
+          "&.Mui-checked": { color: COLORS.pine },
+        },
+      },
+    },
     MuiTextField: {
       defaultProps: {
         variant: "outlined",
@@ -66,10 +75,19 @@ const theme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: {
+          fontSize: 19,
           color: COLORS.pine,
           backgroundColor: COLORS.mint,
           padding: "0 6px",
           borderRadius: 5,
+          "&.Mui-error": { color: COLORS.pine },
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          fontFamily: '"DM Sans", system-ui, Arial, sans-serif',
         },
       },
     },
@@ -93,7 +111,11 @@ const theme = createTheme({
 
     MuiFormHelperText: {
       styleOverrides: {
-        root: { marginLeft: 0 },
+        root: {
+          marginLeft: 0,
+          fontFamily: '"DM Sans", system-ui, Arial, sans-serif',
+          color: COLORS.pine,
+        },
       },
     },
 
@@ -105,6 +127,7 @@ const theme = createTheme({
           fontFamily: FONTS.serif,
         },
       },
+
       variants: [
         {
           props: { variant: "elevated", color: "mint" },

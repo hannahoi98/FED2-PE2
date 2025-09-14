@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
 import RegisterForm from "../components/auth/RegisterForm";
-import { COLORS } from "../theme";
+import { COLORS, FONTS } from "../theme";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -30,23 +30,30 @@ export default function Register() {
           mx: "auto",
         }}
       >
-        <CardContent>
+        <CardContent sx={{ p: { xs: 3, sm: 4, md: 6 } }}>
           <Typography component="h1" variant="h4" align="center" sx={{ mb: 1 }}>
             Register your account
           </Typography>
-          <Divider sx={{ borderColor: COLORS.mint, opacity: 1, mb: 3 }} />
+          <Divider sx={{ opacity: 1, mb: 4 }} />
           <RegisterForm
             onSuccess={(email) => {
               navigate("/auth/login", { state: { prefillEmail: email, from } });
             }}
           />
-          <Box sx={{ textAlign: "center" }}>
-            <Typography> Already have an account? </Typography>
+          <Box sx={{ textAlign: "center", mt: { xs: 3, sm: 4, md: 5 } }}>
+            <Typography sx={{ fontFamily: FONTS.sans }}>
+              {" "}
+              Already have an account?{" "}
+            </Typography>
             <Link
               component={RouterLink}
               to="/auth/login"
               underline="hover"
-              sx={{ color: COLORS.pine, fontWeight: 600 }}
+              sx={{
+                color: COLORS.pine,
+                fontWeight: 800,
+                fontFamily: FONTS.sans,
+              }}
             >
               Login Here
             </Link>
