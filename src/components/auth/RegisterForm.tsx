@@ -94,12 +94,13 @@ export default function RegisterForm({
 
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
-      <Stack>
+      <Stack spacing={3}>
         {serverError && <Alert severity="error">{serverError}</Alert>}
         {serverSuccess && <Alert severity="success">{serverSuccess}</Alert>}
 
         <TextField
           label="Username"
+          placeholder="Username"
           value={form.name}
           onChange={(e) => setField("name")(e.target.value)}
           onBlur={() =>
@@ -115,7 +116,8 @@ export default function RegisterForm({
         />
 
         <TextField
-          label="Email (stud.noroff.no)"
+          label="Email"
+          placeholder="Email"
           value={form.email}
           onChange={(e) => setField("email")(e.target.value)}
           onBlur={() =>
@@ -130,6 +132,7 @@ export default function RegisterForm({
 
         <TextField
           label="Password"
+          placeholder="Password"
           type="password"
           value={form.password}
           onChange={(e) => setField("password")(e.target.value)}
@@ -173,6 +176,7 @@ export default function RegisterForm({
           variant="elevated"
           color="mint"
           disabled={submitting}
+          sx={{ alignSelf: "center" }}
         >
           {submitting ? "Creating account…" : "Create account"}
         </Button>

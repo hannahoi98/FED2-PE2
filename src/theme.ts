@@ -54,6 +54,49 @@ const theme = createTheme({
         a: { color: COLORS.pine },
       },
     },
+    MuiTextField: {
+      defaultProps: {
+        variant: "outlined",
+        fullWidth: true,
+        slotProps: {
+          inputLabel: { shrink: true },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: COLORS.pine,
+          backgroundColor: COLORS.mint,
+          padding: "0 6px",
+          borderRadius: 5,
+        },
+      },
+    },
+
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          backgroundColor: COLORS.white,
+          "& fieldset": { borderColor: COLORS.pine },
+          "&:hover fieldset": { borderColor: COLORS.pine },
+          "&.Mui-focused fieldset": {
+            borderColor: COLORS.pine,
+            borderWidth: 2,
+          },
+        },
+        input: {
+          "&::placeholder": { opacity: 1, color: "rgba(9, 63, 59, 0.6)" },
+        },
+      },
+    },
+
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: { marginLeft: 0 },
+      },
+    },
+
     MuiButton: {
       styleOverrides: {
         root: {
