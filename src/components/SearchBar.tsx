@@ -66,7 +66,7 @@ export default function SearchBar({
           color: tooShort ? COLORS.pine : "inherit",
         },
       }}
-      helperText={tooShort ? `Type at least ${minLength} letters` : " "}
+      helperText={tooShort ? `Type at least ${minLength} letters` : undefined}
       slotProps={{
         input: {
           endAdornment: (

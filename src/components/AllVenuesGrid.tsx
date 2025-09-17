@@ -1,9 +1,16 @@
-import { ALL_VENUES_URL, SEARCH_VENUES_URL } from "../api/endpoints";
+import { ALL_VENUES_URL } from "../api/endpoints";
 import type { Venue, VenueListResponse } from "../types/venue";
 import VenueCard from "./VenueCard";
 import Loader from "./Loader";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Alert, Box, Button, Stack } from "@mui/material";
+import type { Dayjs } from "dayjs";
+
+type Props = {
+  query?: string;
+  from?: Dayjs | null;
+  to?: Dayjs | null;
+};
 
 const PER_PAGE = 12;
 
@@ -14,11 +21,37 @@ function hasImage(v: Venue) {
 const getTimestamp = (v: Venue) =>
   Date.parse(v.created ?? "") || Date.parse(v.updated ?? "") || 0;
 
-type Props = {
-  query?: string;
-};
+const overlaps = (aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) =>
+  aStart < bEnd && aEnd > bStart;
 
-export default function AllVenuesGrid({ query = "" }: Props) {
+function isVenueAvailable(v: Venue, from: Dayjs | null, to: Dayjs | null) {
+  if (!from || !to) return true;
+  const start = from.startOf("day").toDate();
+  const end = to.startOf("day").toDate();
+  const bookings = v.bookings ?? [];
+  return !bookings.some((b) => {
+    const bStart = new Date(b.dateFrom);
+    const bEnd = new Date(b.dateTo);
+    return overlaps(start, end, bStart, bEnd);
+  });
+}
+
+function matchesQuery(v: Venue, q: string) {
+  if (!q) return true;
+  const s = q.toLowerCase();
+  return (
+    v.name.toLowerCase().includes(s) ||
+    (v.description ?? "").toLowerCase().includes(s) ||
+    (v.location?.city ?? "").toLowerCase().includes(s) ||
+    (v.location?.country ?? "").toLowerCase().includes(s)
+  );
+}
+
+export default function AllVenuesGrid({
+  query = "",
+  from = null,
+  to = null,
+}: Props) {
   const [allVenues, setAllVenues] = useState<Venue[]>([]);
   const [visibleCount, setVisibleCount] = useState(PER_PAGE);
   const [loading, setLoading] = useState(true);
@@ -27,35 +60,32 @@ export default function AllVenuesGrid({ query = "" }: Props) {
   useEffect(() => {
     let cancelled = false;
 
-    const fetchAllPages = async (): Promise<void> => {
+    const run = async () => {
       setLoading(true);
       setError(null);
-
       try {
         const collected: Venue[] = [];
-        let currentPage = 1;
-        let lastPage = false;
+        let page = 1;
+        let last = false;
 
-        while (!lastPage) {
+        while (!last) {
           const url = new URL(ALL_VENUES_URL);
-
-          url.searchParams.set("page", String(currentPage));
+          url.searchParams.set("page", String(page));
           url.searchParams.set("limit", String(PER_PAGE));
+          url.searchParams.set("_bookings", "true");
 
           const res = await fetch(url.toString());
-          if (!res.ok) {
+          if (!res.ok)
             throw new Error(
-              `Failed to load venues (page ${currentPage}): ${res.status}`,
+              `Failed to load venues (page ${page}): ${res.status}`,
             );
-          }
 
           const json: VenueListResponse = await res.json();
-
           collected.push(...(json.data ?? []).filter(hasImage));
 
           const next = json.meta?.nextPage;
-          lastPage = Boolean(json.meta?.isLastPage ?? next == null);
-          currentPage = next ?? currentPage + 1;
+          last = Boolean(json.meta?.isLastPage ?? next == null);
+          page = next ?? page + 1;
         }
 
         const map = new Map<string, Venue>();
@@ -70,71 +100,41 @@ export default function AllVenuesGrid({ query = "" }: Props) {
         }
       } catch (e: unknown) {
         if (!cancelled) {
-          const message =
+          const msg =
             e instanceof Error
               ? e.message
               : "Something went wrong while loading venues";
-          setError(message);
+          setError(msg);
         }
       } finally {
         if (!cancelled) setLoading(false);
       }
-    };
-
-    const fetchSearch = async (q: string): Promise<void> => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const url = new URL(SEARCH_VENUES_URL);
-        url.searchParams.set("q", q);
-        url.searchParams.set("page", "1");
-        url.searchParams.set("limit", String(PER_PAGE));
-
-        const res = await fetch(url.toString());
-        if (!res.ok) throw new Error(`Search failed (${res.status})`);
-
-        const json: VenueListResponse = await res.json();
-        const withImages = (json.data ?? []).filter(hasImage);
-        const sorted = withImages.sort(
-          (a, b) => getTimestamp(b) - getTimestamp(a),
-        );
-
-        if (!cancelled) {
-          setAllVenues(sorted);
-          setVisibleCount(PER_PAGE);
-        }
-      } catch (e: unknown) {
-        if (!cancelled) {
-          const message =
-            e instanceof Error
-              ? e.message
-              : "Something went wrong while searching";
-          setError(message);
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-
-    const run = async () => {
-      if (query) await fetchSearch(query);
-      else await fetchAllPages();
     };
 
     run();
     return () => {
       cancelled = true;
     };
-  }, [query]);
+  }, []);
+
+  const filtered = useMemo(() => {
+    const q = (query ?? "").trim();
+    return allVenues.filter(
+      (v) => matchesQuery(v, q) && isVenueAvailable(v, from, to),
+    );
+  }, [allVenues, query, from, to]);
+
+  useEffect(() => {
+    setVisibleCount(PER_PAGE);
+  }, [query, from, to]);
 
   if (loading) return <Loader message="Loading venues…" />;
   if (error) return <Alert severity="error">{error}</Alert>;
   if (!allVenues.length)
-    return <Alert severity="info">No venues with photos yet.</Alert>;
+    return <Alert severity="info">No venues matches your search.</Alert>;
 
-  const visible = allVenues.slice(0, visibleCount);
-  const hasMore = !query && visibleCount < allVenues.length;
+  const visible = filtered.slice(0, visibleCount);
+  const hasMore = visibleCount < filtered.length;
 
   return (
     <Stack>

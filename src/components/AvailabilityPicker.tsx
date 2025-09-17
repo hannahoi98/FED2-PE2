@@ -1,7 +1,7 @@
 import type { VenueBooking } from "../types/venue";
-import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { Stack } from "@mui/material";
+import LabeledDatePicker from "./ui/LabeledDatePicker";
 
 function isDateInsideAnyBooking(date: Dayjs, bookings: VenueBooking[]) {
   return bookings.some((b) => {
@@ -14,8 +14,21 @@ function isDateInsideAnyBooking(date: Dayjs, bookings: VenueBooking[]) {
   });
 }
 
+function rangeOverlapsBookings(
+  start: Dayjs,
+  end: Dayjs,
+  bookings: VenueBooking[],
+) {
+  if (!start || !end) return false;
+  return bookings.some((b) => {
+    const bStart = dayjs(b.dateFrom).startOf("day");
+    const bEnd = dayjs(b.dateTo).startOf("day");
+    return start.isBefore(bEnd, "day") && end.isAfter(bStart, "day");
+  });
+}
+
 type Props = {
-  bookings: VenueBooking[] | undefined;
+  bookings?: VenueBooking[];
   checkIn: Dayjs | null;
   checkOut: Dayjs | null;
   onChange: (next: { checkIn: Dayjs | null; checkOut: Dayjs | null }) => void;
@@ -34,30 +47,34 @@ export default function AvailabilityPicker({
 
   return (
     <Stack>
-      <DatePicker
+      <LabeledDatePicker
         label="Check-in"
         value={checkIn}
         onChange={(v) => onChange({ checkIn: v, checkOut })}
-        shouldDisableDate={disableBooked}
         minDate={today}
-        slotProps={{
-          textField: { fullWidth: true },
-        }}
+        width={160}
+        placeholder="DD/MM/YY"
+        shouldDisableDate={(d) =>
+          disableBooked(d) ||
+          (!!checkOut &&
+            (d.isSame(checkOut, "day") ||
+              d.isAfter(checkOut, "day") ||
+              rangeOverlapsBookings(d, checkOut, bookings)))
+        }
       />
-      <DatePicker
+      <LabeledDatePicker
         label="Check-out"
         value={checkOut}
         onChange={(v) => onChange({ checkIn, checkOut: v })}
+        width={160}
+        placeholder="DD/MM/YY"
         shouldDisableDate={(d) =>
           disableBooked(d) ||
-          (checkIn
-            ? d.isSame(checkIn, "day") || d.isBefore(checkIn, "day")
-            : false)
+          (!!checkIn &&
+            (d.isSame(checkIn, "day") ||
+              d.isBefore(checkIn, "day") ||
+              rangeOverlapsBookings(checkIn, d, bookings)))
         }
-        minDate={checkIn ?? today}
-        slotProps={{
-          textField: { fullWidth: true },
-        }}
       />
     </Stack>
   );
