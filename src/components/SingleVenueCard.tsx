@@ -14,6 +14,8 @@ import { COLORS, FONTS } from "../theme";
 import { Dayjs } from "dayjs";
 import AvailabilityPicker from "./AvailabilityPicker";
 import { useState } from "react";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 type Props = {
   venue: Venue;
@@ -45,6 +47,33 @@ export default function SingleVenueCard({
     }
   };
 
+  const meta = venue.meta ?? {
+    wifi: false,
+    parking: false,
+    breakfast: false,
+    pets: false,
+  };
+
+  const FEATURES: { key: keyof typeof meta; label: string }[] = [
+    { key: "wifi", label: "Wi-Fi" },
+    { key: "parking", label: "Parking" },
+    { key: "breakfast", label: "Breakfast" },
+    { key: "pets", label: "Pets" },
+  ];
+
+  const FeatureItem = ({ ok, label }: { ok: boolean; label: string }) => (
+    <Stack direction="row" spacing={1} alignItems="center">
+      {ok ? (
+        <CheckCircleOutlineIcon fontSize="small" sx={{ color: COLORS.pine }} />
+      ) : (
+        <HighlightOffIcon fontSize="small" sx={{ color: COLORS.mint }} />
+      )}
+      <Typography sx={{ fontFamily: FONTS.sans, opacity: ok ? 1 : 0.7 }}>
+        {label}
+      </Typography>
+    </Stack>
+  );
+
   return (
     <Card>
       <CardMedia
@@ -66,7 +95,7 @@ export default function SingleVenueCard({
           </Typography>
 
           {place && (
-            <Typography variant="body2" sx={{ opacity: 0.75 }}>
+            <Typography variant="h6" sx={{ opacity: 0.75 }}>
               {place}
             </Typography>
           )}
@@ -104,13 +133,12 @@ export default function SingleVenueCard({
               {venue.maxGuests} Guests
             </Typography>
           </Stack>
-
+        </Stack>
+        <Stack alignItems="flex-start" gap={2}>
           {venue.description && (
             <Card elevation={0}>
               <CardContent>
-                <Typography variant="h6" sx={{ mb: 1 }}>
-                  About this venue
-                </Typography>
+                <Typography variant="h6">About this venue</Typography>
                 <Typography sx={{ fontFamily: FONTS.sans }}>
                   {venue.description}
                 </Typography>
@@ -119,6 +147,27 @@ export default function SingleVenueCard({
           )}
           <Card elevation={0}>
             <CardContent>
+              <Typography variant="h6">Ameneties</Typography>
+              <Stack
+                direction="row"
+                spacing={2}
+                justifyContent="center"
+                sx={{ flexWrap: "wrap", rowGap: 1, my: 0.5 }}
+              >
+                {FEATURES.map(({ key, label }) => (
+                  <FeatureItem
+                    key={key}
+                    ok={Boolean(meta[key])}
+                    label={label}
+                  />
+                ))}
+              </Stack>
+              <Typography variant="h6" sx={{ mb: 1 }}>
+                Price
+              </Typography>
+              <Typography sx={{ fontFamily: FONTS.sans }}>
+                {venue.price} kr / night
+              </Typography>
               <Typography variant="h6" sx={{ mb: 1 }}>
                 Pick Your Dates
               </Typography>
@@ -138,6 +187,13 @@ export default function SingleVenueCard({
                 disabled={!canBook}
               >
                 {canBook ? "Book this venue" : "Select dates to book"}
+              </Button>
+              <Button
+                variant="elevated"
+                color="white"
+                onClick={() => navigate("/")}
+              >
+                Back to all venues
               </Button>
             </CardContent>
           </Card>
