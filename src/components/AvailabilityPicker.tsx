@@ -46,7 +46,7 @@ export default function AvailabilityPicker({
     d.isBefore(today, "day") || isDateInsideAnyBooking(d, bookings);
 
   return (
-    <Stack>
+    <Stack direction="row" gap={2}>
       <LabeledDatePicker
         label="Check-in"
         value={checkIn}
