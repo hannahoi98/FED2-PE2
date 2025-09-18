@@ -11,6 +11,11 @@ export const SINGLE_VENUE_WITH_BOOKINGS_URL = (id: string) =>
 
 export const REGISTER_URL = `${BASE_API_URL}/auth/register`;
 
+export const LOGIN_URL = `${BASE_API_URL}/auth/login`;
+
+export const LOGIN_URL_WITH_HOLIDAZE = (holidaze = true) =>
+  `${LOGIN_URL}?_holidaze=${String(holidaze)}`;
+
 export const API_KEY = "d5309f47-302a-47b5-9c4f-a00bba60239f";
 
 // Helper for right headers in all requests

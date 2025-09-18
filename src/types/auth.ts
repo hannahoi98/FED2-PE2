@@ -17,3 +17,27 @@ export type RegisterSuccess = {
 
 export type ApiErrorItem = { message: string };
 export type ApiErrorResponse = { message?: string; errors?: ApiErrorItem[] };
+
+export type LoginCredentials = {
+  email: string;
+  password: string;
+};
+
+export type LoginSuccess = {
+  data: {
+    name: string;
+    email: string;
+    avatar?: { url?: string; alt?: string } | null;
+    accessToken: string;
+    venueManager: boolean;
+  };
+  meta: Record<string, unknown>;
+};
+
+export type AuthUser = {
+  name: string;
+  email: string;
+  accessToken: string;
+  venueManager: boolean;
+  avatarUrl?: string;
+};
