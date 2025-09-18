@@ -22,6 +22,24 @@ export type VenueLocation = {
   lng?: number;
 };
 
+export type BookingCustomer = {
+  name: string;
+  email: string;
+  avatar?: { url: string; alt?: string };
+  banner?: { url: string; alt?: string };
+  bio?: string;
+};
+
+export type VenueBooking = {
+  id: string;
+  dateFrom: string;
+  dateTo: string;
+  guests: number;
+  created?: string;
+  updated?: string;
+  customer?: BookingCustomer;
+};
+
 export type Venue = {
   id: string;
   name: string;
@@ -34,6 +52,7 @@ export type Venue = {
   updated?: string;
   meta?: VenueMeta;
   location?: VenueLocation;
+  bookings?: VenueBooking[];
 };
 
 export type VenueListResponse = {

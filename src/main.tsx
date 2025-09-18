@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 // Importing fonts
 import "@fontsource/dm-serif-display/400.css";
@@ -19,7 +21,9 @@ createRoot(document.getElementById("root")!).render(
     <ThemeProvider theme={theme}>
       <CssBaseline>
         <BrowserRouter>
-          <App />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <App />
+          </LocalizationProvider>
         </BrowserRouter>
       </CssBaseline>
     </ThemeProvider>

@@ -148,7 +148,7 @@ const theme = createTheme({
           style: {
             backgroundColor: COLORS.white,
             color: COLORS.pine,
-            border: `1px solid ${COLORS.mint}`,
+            border: `1px solid ${COLORS.pine}`,
           },
         },
       ],

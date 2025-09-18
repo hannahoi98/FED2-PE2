@@ -6,6 +6,9 @@ export const SEARCH_VENUES_URL = `${BASE_API_URL}/holidaze/venues/search`;
 export const SINGLE_VENUE_URL = (id: string) =>
   `${BASE_API_URL}/holidaze/venues/${id}`;
 
+export const SINGLE_VENUE_WITH_BOOKINGS_URL = (id: string) =>
+  `${SINGLE_VENUE_URL(id)}?_bookings=true`;
+
 export const REGISTER_URL = `${BASE_API_URL}/auth/register`;
 
 export const API_KEY = "d5309f47-302a-47b5-9c4f-a00bba60239f";
