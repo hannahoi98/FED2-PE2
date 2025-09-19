@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import SingleVenue from "./pages/SingleVenue";
 import BottomNav from "./components/BottomNav";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/venues/:id" element={<SingleVenue />} />
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </Container>
         <Box sx={{ display: { xs: "none", md: "block" } }}>

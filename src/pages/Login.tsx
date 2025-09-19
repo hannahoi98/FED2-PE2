@@ -18,7 +18,6 @@ export default function Login() {
   };
 
   const prefillEmail = loc.state?.prefillEmail;
-  const from = loc.state?.from;
 
   return (
     <Stack
@@ -43,7 +42,7 @@ export default function Login() {
           <LoginForm
             prefillEmail={prefillEmail}
             onSuccess={() => {
-              navigate(from || "/", { replace: true });
+              navigate("/profile", { replace: true });
             }}
           />
           <Box sx={{ textAlign: "center", mt: { xs: 3, sm: 4, md: 5 } }}>
