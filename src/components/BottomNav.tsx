@@ -1,24 +1,63 @@
 import { Box, BottomNavigation, BottomNavigationAction } from "@mui/material";
-import { TravelExploreSharp } from "@mui/icons-material";
-import { PersonAddSharp } from "@mui/icons-material";
-import { PersonSharp } from "@mui/icons-material";
+import {
+  TravelExploreSharp,
+  PersonAddSharp,
+  PersonSharp,
+  Logout,
+} from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { COLORS } from "../theme";
-
-const ITEMS = [
-  { label: "Browse", to: "/", icon: <TravelExploreSharp /> },
-  { label: "Register", to: "/auth/register", icon: <PersonAddSharp /> },
-  { label: "Login", to: "/auth/login", icon: <PersonSharp /> },
-];
+import { useState, useEffect, useMemo } from "react";
+import { loadAuth, clearAuth, onAuthChange } from "../utils/authStorage";
 
 export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [auth, setAuth] = useState(loadAuth());
+
+  useEffect(() => onAuthChange(() => setAuth(loadAuth())), []);
+
+  const ITEMS = useMemo(
+    () =>
+      !auth
+        ? [
+            { label: "Browse", to: "/", icon: <TravelExploreSharp /> },
+            {
+              label: "Register",
+              to: "/auth/register",
+              icon: <PersonAddSharp />,
+            },
+            { label: "Login", to: "/auth/login", icon: <PersonSharp /> },
+          ]
+        : [
+            { label: "Browse", to: "/", icon: <TravelExploreSharp /> },
+            { label: "Profile", to: "/profile", icon: <PersonSharp /> },
+            { label: "Logout", to: "__logout__", icon: <Logout /> },
+          ],
+    [auth],
+  );
+
+  const path = location.pathname;
 
   const value = (() => {
-    const idx = ITEMS.findIndex((it) => location.pathname.startsWith(it.to));
+    if (path === "/") {
+      return ITEMS.findIndex((it) => it.to === "/");
+    }
+    const idx = ITEMS.findIndex(
+      (it) => it.to !== "/" && it.to !== "__logout__" && path.startsWith(it.to),
+    );
     return idx === -1 ? 0 : idx;
   })();
+
+  const handleChange = (_: unknown, newIdx: number) => {
+    const it = ITEMS[newIdx];
+    if (it.to === "__logout__") {
+      clearAuth();
+      navigate("/auth/login");
+    } else {
+      navigate(it.to);
+    }
+  };
 
   return (
     <Box
@@ -33,7 +72,7 @@ export default function BottomNav() {
     >
       <BottomNavigation
         value={value}
-        onChange={(_, newVal) => navigate(ITEMS[newVal].to)}
+        onChange={handleChange}
         showLabels
         sx={{
           bgcolor: COLORS.pine,

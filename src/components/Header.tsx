@@ -1,8 +1,34 @@
 import { AppBar, Typography, Toolbar, Box, Button } from "@mui/material";
 import { COLORS } from "../theme";
 import { FONTS } from "../theme";
+import { useNavigate, NavLink } from "react-router-dom";
+import { loadAuth, onAuthChange, clearAuth } from "../utils/authStorage";
+import { useState, useEffect } from "react";
+
+const linkSx = {
+  fontSize: "1.15rem",
+  textTransform: "none",
+  color: "inherit",
+  borderBottom: "1px solid transparent",
+  borderRadius: 0,
+  "&:hover": { color: COLORS.mint },
+  '&[aria-current="page"]': {
+    color: COLORS.mint,
+    borderBottom: `1px solid ${COLORS.mint}`,
+  },
+} as const;
 
 export default function Header() {
+  const navigate = useNavigate();
+  const [auth, setAuth] = useState(loadAuth());
+
+  useEffect(() => onAuthChange(() => setAuth(loadAuth())), []);
+
+  const handleLogout = () => {
+    clearAuth();
+    navigate("/auth/login");
+  };
+
   return (
     <AppBar
       position="sticky"
@@ -17,8 +43,12 @@ export default function Header() {
         }}
       >
         <Typography
-          component="h1"
+          component={NavLink}
+          to="/"
+          end
           sx={{
+            textDecoration: "none",
+            color: "inherit",
             fontFamily: FONTS.logo,
             mr: "auto",
             lineHeight: 1,
@@ -28,51 +58,28 @@ export default function Header() {
           Holidaze
         </Typography>
         <Box sx={{ display: { xs: "none", md: "flex" }, gap: 1.5 }}>
-          <Button
-            variant="text"
-            color="inherit"
-            component="a"
-            href="/"
-            sx={{
-              fontSize: "1.15rem",
-              textTransform: "none",
-              "&:hover": {
-                color: COLORS.mint,
-              },
-            }}
-          >
+          <Button component={NavLink} to="/" end sx={linkSx}>
             Browse Venues
           </Button>
-          <Button
-            variant="text"
-            color="inherit"
-            component="a"
-            href="/auth/register"
-            sx={{
-              fontSize: "1.15rem",
-              textTransform: "none",
-              "&:hover": {
-                color: COLORS.mint,
-              },
-            }}
-          >
-            Register
-          </Button>
-          <Button
-            variant="text"
-            color="inherit"
-            component="a"
-            href="/auth/login"
-            sx={{
-              fontSize: "1.15rem",
-              textTransform: "none",
-              "&:hover": {
-                color: COLORS.mint,
-              },
-            }}
-          >
-            Login
-          </Button>
+          {!auth ? (
+            <>
+              <Button component={NavLink} to="/auth/register" sx={linkSx}>
+                Register
+              </Button>
+              <Button component={NavLink} to="/auth/login" sx={linkSx}>
+                Login
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button component={NavLink} to="/profile" sx={linkSx}>
+                Profile
+              </Button>
+              <Button onClick={handleLogout} sx={linkSx}>
+                Logout
+              </Button>
+            </>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

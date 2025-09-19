@@ -25,3 +25,18 @@ export function buildHeaders(token?: string): HeadersInit {
   if (token) h["Authorization"] = `Bearer ${token}`;
   return h;
 }
+
+export const PROFILE_URL = (name: string) =>
+  `${BASE_API_URL}/holidaze/profiles/${encodeURIComponent(name)}`;
+
+export function withQuery(
+  url: string,
+  params: Record<string, string | number | boolean | undefined>,
+) {
+  const q = new URLSearchParams();
+  Object.entries(params).forEach(([k, v]) => {
+    if (v !== undefined) q.set(k, String(v));
+  });
+  const qs = q.toString();
+  return qs ? `${url}?${qs}` : url;
+}
