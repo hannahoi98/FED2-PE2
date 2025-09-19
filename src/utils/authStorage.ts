@@ -2,6 +2,14 @@ import type { AuthUser, LoginSuccess } from "../types/auth";
 
 const KEY = "auth";
 
+export const authEvents = new EventTarget();
+const AUTH_CHANGED = "auth-changed";
+export function onAuthChange(cb: () => void) {
+  const handler = () => cb();
+  authEvents.addEventListener(AUTH_CHANGED, handler);
+  return () => authEvents.removeEventListener(AUTH_CHANGED, handler);
+}
+
 export function saveAuth(login: LoginSuccess) {
   const d = login.data;
   const auth: AuthUser = {
@@ -12,6 +20,7 @@ export function saveAuth(login: LoginSuccess) {
     avatarUrl: d.avatar?.url ?? undefined,
   };
   localStorage.setItem(KEY, JSON.stringify(auth));
+  authEvents.dispatchEvent(new Event(AUTH_CHANGED));
   return auth;
 }
 
@@ -26,4 +35,5 @@ export function loadAuth(): AuthUser | null {
 
 export function clearAuth() {
   localStorage.removeItem(KEY);
+  authEvents.dispatchEvent(new Event(AUTH_CHANGED));
 }
