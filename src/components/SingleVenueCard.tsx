@@ -1,5 +1,6 @@
 import type { Venue } from "../types/venue";
 import {
+  Alert,
   Button,
   Card,
   CardContent,
@@ -8,23 +9,29 @@ import {
   Typography,
   Stack,
   Rating,
+  TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { COLORS, FONTS } from "../theme";
 import { Dayjs } from "dayjs";
 import AvailabilityPicker from "./AvailabilityPicker";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { createBooking } from "../api/bookings";
 
 type Props = {
   venue: Venue;
   isAuthenticated?: boolean;
+  isCustomer?: boolean;
+  token?: string;
 };
 
 export default function SingleVenueCard({
   venue,
   isAuthenticated = false,
+  isCustomer = false,
+  token = "",
 }: Props) {
   const navigate = useNavigate();
 
@@ -37,13 +44,58 @@ export default function SingleVenueCard({
 
   const [checkIn, setCheckIn] = useState<Dayjs | null>(null);
   const [checkOut, setCheckOut] = useState<Dayjs | null>(null);
-  const canBook = Boolean(checkIn && checkOut);
+  const [guests, setGuests] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [serverSuccess, setServerSuccess] = useState<string | null>(null);
 
-  const onBook = () => {
-    if (isAuthenticated) {
-      navigate(`/venues/${venue.id}/book`);
-    } else {
-      navigate(`/auth/login?redirect=/venues/${venue.id}`);
+  const nights = useMemo(() => {
+    if (!checkIn || !checkOut) return 0;
+    return Math.max(
+      0,
+      checkOut.startOf("day").diff(checkIn.startOf("day"), "day"),
+    );
+  }, [checkIn, checkOut]);
+
+  const canSelectDates = Boolean(checkIn && checkOut);
+  const canBook = canSelectDates && guests > 0 && guests <= venue.maxGuests;
+
+  const onBookClick = async () => {
+    setServerError(null);
+    setServerSuccess(null);
+
+    if (!isAuthenticated) {
+      navigate(`/auth/login`, { state: { from: `/venues/${venue.id}` } });
+      return;
+    }
+
+    if (!isCustomer) {
+      setServerError("Only customers can book a venue.");
+      return;
+    }
+
+    if (!canBook || !checkIn || !checkOut) return;
+
+    try {
+      setSubmitting(true);
+      await createBooking(
+        {
+          dateFrom: checkIn.startOf("day").toDate().toISOString(),
+          dateTo: checkOut.startOf("day").toDate().toISOString(),
+          guests,
+          venueId: venue.id,
+        },
+        token,
+      );
+      setServerSuccess("Booking confirmed! 🎉");
+      navigate("/profile");
+      setCheckIn(null);
+      setCheckOut(null);
+      setGuests(1);
+    } catch (e: unknown) {
+      setServerError(e instanceof Error ? e.message : "Booking failed");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -176,6 +228,43 @@ export default function SingleVenueCard({
               }}
             />
           </Stack>
+
+          <Stack>
+            <Typography variant="h6" mb={1}>
+              Guests
+            </Typography>
+            <TextField
+              type="number"
+              inputProps={{ min: 1, max: venue.maxGuests }}
+              value={guests}
+              onChange={(e) =>
+                setGuests(
+                  Math.max(
+                    1,
+                    Math.min(venue.maxGuests, Number(e.target.value) || 1),
+                  ),
+                )
+              }
+              sx={{ width: 160 }}
+              helperText={`Max ${venue.maxGuests} guests`}
+            />
+          </Stack>
+          <Stack>
+            <Typography variant="h6" mb={1}>
+              Booking Summary
+            </Typography>
+            <Typography sx={{ fontFamily: FONTS.sans }}>
+              {canSelectDates
+                ? `${nights} night${nights === 1 ? "" : "s"} × ${venue.price} kr = ${nights * venue.price} kr`
+                : "Select dates to see the total"}
+            </Typography>
+            <Typography sx={{ fontFamily: FONTS.sans }}>
+              Guests: {guests}
+            </Typography>
+            {serverError && <Alert severity="error">{serverError}</Alert>}
+            {serverSuccess && <Alert severity="success">{serverSuccess}</Alert>}
+          </Stack>
+
           <Stack direction="row" gap={2}>
             <Button
               variant="elevated"
@@ -188,11 +277,19 @@ export default function SingleVenueCard({
             <Button
               variant="elevated"
               color="mint"
-              onClick={onBook}
-              disabled={!canBook}
+              onClick={onBookClick}
+              disabled={!canBook || submitting}
               sx={{ width: 160 }}
             >
-              {canBook ? "Book this venue" : "Select dates to book"}
+              {!isAuthenticated
+                ? "Login to book"
+                : !isCustomer
+                  ? "Only customers can book"
+                  : submitting
+                    ? "Booking…"
+                    : canBook
+                      ? "Confirm booking"
+                      : "Select dates & guests"}
             </Button>
           </Stack>
         </Stack>

@@ -13,6 +13,8 @@ export const REGISTER_URL = `${BASE_API_URL}/auth/register`;
 
 export const LOGIN_URL = `${BASE_API_URL}/auth/login`;
 
+export const BOOKINGS_URL = `${BASE_API_URL}/holidaze/bookings`;
+
 export const LOGIN_URL_WITH_HOLIDAZE = (holidaze = true) =>
   `${LOGIN_URL}?_holidaze=${String(holidaze)}`;
 
