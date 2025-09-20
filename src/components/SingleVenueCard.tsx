@@ -5,11 +5,13 @@ import {
   Card,
   CardContent,
   CardMedia,
+  Chip,
   Divider,
   Typography,
   Stack,
   Rating,
   TextField,
+  Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { COLORS, FONTS } from "../theme";
@@ -186,113 +188,156 @@ export default function SingleVenueCard({
             </Typography>
           </Stack>
         </Stack>
-        <Stack alignItems="flex-start" gap={2.5}>
-          {venue.description && (
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "1fr 340px" },
+            gap: { xs: 3, md: 4 },
+            alignItems: "start",
+          }}
+        >
+          <Stack alignItems="flex-start" gap={2.5}>
+            {venue.description && (
+              <Stack>
+                <Typography variant="h6">About this venue</Typography>
+                <Typography sx={{ fontFamily: FONTS.sans }}>
+                  {venue.description}
+                </Typography>
+              </Stack>
+            )}
             <Stack>
-              <Typography variant="h6">About this venue</Typography>
+              <Typography variant="h6">Ameneties</Typography>
+              <Stack
+                direction="row"
+                spacing={2}
+                justifyContent="center"
+                sx={{ flexWrap: "wrap" }}
+              >
+                {FEATURES.map(({ key, label }) => (
+                  <FeatureItem
+                    key={key}
+                    ok={Boolean(meta[key])}
+                    label={label}
+                  />
+                ))}
+              </Stack>
+            </Stack>
+            <Stack>
+              <Typography variant="h6">Price</Typography>
               <Typography sx={{ fontFamily: FONTS.sans }}>
-                {venue.description}
+                {venue.price} kr / night
               </Typography>
             </Stack>
-          )}
-          <Stack>
-            <Typography variant="h6">Ameneties</Typography>
             <Stack
-              direction="row"
-              spacing={2}
-              justifyContent="center"
-              sx={{ flexWrap: "wrap" }}
+              gap={2}
+              sx={{
+                p: 2.5,
+                border: `1px solid ${COLORS.mint}`,
+                borderRadius: 2,
+                position: { md: "sticky" },
+                top: { md: 88 },
+              }}
             >
-              {FEATURES.map(({ key, label }) => (
-                <FeatureItem key={key} ok={Boolean(meta[key])} label={label} />
-              ))}
+              <Typography variant="h6" mb={1}>
+                Book This Venue
+              </Typography>
+              {serverError && <Alert severity="error">{serverError}</Alert>}
+              {serverSuccess && (
+                <Alert severity="success">{serverSuccess}</Alert>
+              )}
+
+              <Stack direction="row" gap={2} sx={{ flexWrap: "wrap" }}>
+                <AvailabilityPicker
+                  bookings={venue.bookings}
+                  checkIn={checkIn}
+                  checkOut={checkOut}
+                  onChange={({ checkIn, checkOut }) => {
+                    setCheckIn(checkIn);
+                    setCheckOut(checkOut);
+                  }}
+                />
+                <Stack spacing={0.5}>
+                  <Chip
+                    label="Guests"
+                    size="small"
+                    variant="outlined"
+                    sx={{
+                      alignSelf: "flex-start",
+                      bgcolor: COLORS.mint,
+                      border: `1px solid ${COLORS.mint}`,
+                      color: COLORS.pine,
+                      fontFamily: FONTS.sans,
+                      height: 24,
+                    }}
+                  />
+                  <TextField
+                    type="number"
+                    size="small"
+                    inputProps={{ min: 1, max: venue.maxGuests }}
+                    value={guests}
+                    onChange={(e) =>
+                      setGuests(
+                        Math.max(
+                          1,
+                          Math.min(
+                            venue.maxGuests,
+                            Number(e.target.value) || 1,
+                          ),
+                        ),
+                      )
+                    }
+                    sx={{ width: 160 }}
+                    helperText={`Max ${venue.maxGuests} guests`}
+                  />
+                </Stack>
+                <Stack
+                  sx={{
+                    p: 1.5,
+                    borderRadius: 1,
+                    bgcolor: "rgba(9,63,59,0.04)",
+                  }}
+                >
+                  <Typography sx={{ fontFamily: FONTS.sans }}>
+                    {canSelectDates
+                      ? `${nights} night${nights === 1 ? "" : "s"} × ${venue.price} kr = ${nights * venue.price} kr`
+                      : "Select dates to see the total"}
+                  </Typography>
+                  <Typography sx={{ fontFamily: FONTS.sans }}>
+                    Guests: {guests}
+                  </Typography>
+                </Stack>
+                <Button
+                  variant="elevated"
+                  color="mint"
+                  onClick={onBookClick}
+                  disabled={!canBook || submitting}
+                  sx={{ width: 200 }}
+                >
+                  {!isAuthenticated
+                    ? "Login to book"
+                    : !isCustomer
+                      ? "Only customers can book"
+                      : submitting
+                        ? "Booking…"
+                        : canBook
+                          ? "Confirm booking"
+                          : "Select dates & guests"}
+                </Button>
+              </Stack>
+            </Stack>
+
+            <Stack direction="row" gap={2}>
+              <Button
+                variant="elevated"
+                color="white"
+                onClick={() => navigate("/")}
+                sx={{ width: 160 }}
+              >
+                Back to all venues
+              </Button>
             </Stack>
           </Stack>
-          <Stack>
-            <Typography variant="h6">Price</Typography>
-            <Typography sx={{ fontFamily: FONTS.sans }}>
-              {venue.price} kr / night
-            </Typography>
-          </Stack>
-          <Stack>
-            <Typography variant="h6" mb={1}>
-              Pick Your Dates
-            </Typography>
-            <AvailabilityPicker
-              bookings={venue.bookings}
-              checkIn={checkIn}
-              checkOut={checkOut}
-              onChange={({ checkIn, checkOut }) => {
-                setCheckIn(checkIn);
-                setCheckOut(checkOut);
-              }}
-            />
-          </Stack>
-
-          <Stack>
-            <Typography variant="h6" mb={1}>
-              Guests
-            </Typography>
-            <TextField
-              type="number"
-              inputProps={{ min: 1, max: venue.maxGuests }}
-              value={guests}
-              onChange={(e) =>
-                setGuests(
-                  Math.max(
-                    1,
-                    Math.min(venue.maxGuests, Number(e.target.value) || 1),
-                  ),
-                )
-              }
-              sx={{ width: 160 }}
-              helperText={`Max ${venue.maxGuests} guests`}
-            />
-          </Stack>
-          <Stack>
-            <Typography variant="h6" mb={1}>
-              Booking Summary
-            </Typography>
-            <Typography sx={{ fontFamily: FONTS.sans }}>
-              {canSelectDates
-                ? `${nights} night${nights === 1 ? "" : "s"} × ${venue.price} kr = ${nights * venue.price} kr`
-                : "Select dates to see the total"}
-            </Typography>
-            <Typography sx={{ fontFamily: FONTS.sans }}>
-              Guests: {guests}
-            </Typography>
-            {serverError && <Alert severity="error">{serverError}</Alert>}
-            {serverSuccess && <Alert severity="success">{serverSuccess}</Alert>}
-          </Stack>
-
-          <Stack direction="row" gap={2}>
-            <Button
-              variant="elevated"
-              color="white"
-              onClick={() => navigate("/")}
-              sx={{ width: 160 }}
-            >
-              Back to all venues
-            </Button>
-            <Button
-              variant="elevated"
-              color="mint"
-              onClick={onBookClick}
-              disabled={!canBook || submitting}
-              sx={{ width: 160 }}
-            >
-              {!isAuthenticated
-                ? "Login to book"
-                : !isCustomer
-                  ? "Only customers can book"
-                  : submitting
-                    ? "Booking…"
-                    : canBook
-                      ? "Confirm booking"
-                      : "Select dates & guests"}
-            </Button>
-          </Stack>
-        </Stack>
+        </Box>
       </CardContent>
     </Card>
   );
