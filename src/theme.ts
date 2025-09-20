@@ -141,6 +141,10 @@ const theme = createTheme({
           style: {
             backgroundColor: COLORS.pine,
             color: COLORS.page,
+            "&.Mui-disabled": {
+              color: COLORS.page,
+              opacity: 0.9,
+            },
           },
         },
         {
