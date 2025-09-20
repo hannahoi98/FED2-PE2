@@ -46,13 +46,12 @@ export default function AvailabilityPicker({
     d.isBefore(today, "day") || isDateInsideAnyBooking(d, bookings);
 
   return (
-    <Stack direction="row" gap={2}>
+    <Stack direction={{ xs: "column", sm: "row" }} gap={2}>
       <LabeledDatePicker
         label="Check-in"
         value={checkIn}
         onChange={(v) => onChange({ checkIn: v, checkOut })}
         minDate={today}
-        width={160}
         placeholder="DD/MM/YY"
         shouldDisableDate={(d) =>
           disableBooked(d) ||
@@ -61,12 +60,14 @@ export default function AvailabilityPicker({
               d.isAfter(checkOut, "day") ||
               rangeOverlapsBookings(d, checkOut, bookings)))
         }
+        slotProps={{
+          textField: { size: "small", sx: { width: { xs: "100%", sm: 150 } } },
+        }}
       />
       <LabeledDatePicker
         label="Check-out"
         value={checkOut}
         onChange={(v) => onChange({ checkIn, checkOut: v })}
-        width={160}
         placeholder="DD/MM/YY"
         shouldDisableDate={(d) =>
           disableBooked(d) ||
@@ -75,6 +76,9 @@ export default function AvailabilityPicker({
               d.isBefore(checkIn, "day") ||
               rangeOverlapsBookings(checkIn, d, bookings)))
         }
+        slotProps={{
+          textField: { size: "small", sx: { width: { xs: "100%", sm: 150 } } },
+        }}
       />
     </Stack>
   );

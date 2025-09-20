@@ -214,10 +214,10 @@ export default function SingleVenueCard({
             <Stack>
               <Typography variant="h6">Ameneties</Typography>
               <Stack
-                direction="row"
-                spacing={2}
+                direction={{ xs: "column", sm: "row" }}
+                spacing={{ xs: 1.25, sm: 2 }}
                 justifyContent="center"
-                sx={{ flexWrap: "wrap" }}
+                sx={{ flexWrap: "wrap", rowGap: 1.5, columnGap: 2 }}
               >
                 {FEATURES.map(({ key, label }) => (
                   <FeatureItem
@@ -238,11 +238,13 @@ export default function SingleVenueCard({
           <Stack
             gap={2}
             sx={{
-              p: 2.5,
+              p: { xs: 2, md: 2.5 },
               border: `1px solid ${COLORS.mint}`,
               borderRadius: 2,
               position: { md: "sticky" },
               top: { md: 88 },
+              maxWidth: { xs: "100%", md: 380 },
+              justifySelf: { md: "end" },
             }}
           >
             <Typography variant="h6" mb={1}>
@@ -251,7 +253,13 @@ export default function SingleVenueCard({
             {serverError && <Alert severity="error">{serverError}</Alert>}
             {serverSuccess && <Alert severity="success">{serverSuccess}</Alert>}
 
-            <Stack direction="row" gap={2} sx={{ flexWrap: "wrap" }}>
+            <Stack
+              direction={{ xs: "column", md: "row" }}
+              gap={2}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              sx={{ width: "100%" }}
+            >
               <AvailabilityPicker
                 bookings={venue.bookings}
                 checkIn={checkIn}
@@ -288,7 +296,7 @@ export default function SingleVenueCard({
                       ),
                     )
                   }
-                  sx={{ width: 160 }}
+                  sx={{ width: { xs: "100%", sm: 160 } }}
                   helperText={`Max ${venue.maxGuests} guests`}
                 />
               </Stack>
@@ -296,7 +304,7 @@ export default function SingleVenueCard({
                 sx={{
                   p: 1.5,
                   borderRadius: 1,
-                  width: "200px",
+                  width: { xs: "100%", sm: 200 },
                   bgcolor: "rgba(142, 197, 190, 0.12)",
                 }}
               >
