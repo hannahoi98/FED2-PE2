@@ -42,6 +42,7 @@ export default function BookingCard({ booking }: Props) {
     0,
     to.startOf("day").diff(from.startOf("day"), "day"),
   );
+  const total = (v?.price ?? 0) * nights;
 
   return (
     <Card
@@ -62,43 +63,37 @@ export default function BookingCard({ booking }: Props) {
         }}
       />
       <CardContent sx={{ pt: 1.75 }}>
-        <Stack spacing={0.5} alignItems="center">
+        <Stack spacing={0.25} alignItems="center">
           <Typography component="h3" variant="h6">
             {v.name}
           </Typography>
 
-          {place && <Typography>{place}</Typography>}
+          {place && <Typography sx={{ opacity: 0.7 }}>{place}</Typography>}
         </Stack>
 
-        <Stack>
+        <Stack spacing={0.5} sx={{ mt: 1.75 }}>
           <Typography sx={{ fontFamily: FONTS.sans }}>
-            {from.format("DD/MM/YY")} – {to.format("DD/MM/YY")}
+            <strong>Your stay:</strong> {from.format("DD/MM/YY")} –{" "}
+            {to.format("DD/MM/YY")}{" "}
           </Typography>
-
           <Typography sx={{ fontFamily: FONTS.sans }}>
-            {nights} night{nights === 1 ? "" : "s"}
+            <strong>Your booked guests:</strong> {booking.guests}
           </Typography>
-
           <Typography sx={{ fontFamily: FONTS.sans }}>
-            Guests: {booking.guests}
+            <strong>Your price:</strong> {total} kr
           </Typography>
         </Stack>
-
-        {typeof v.price === "number" && (
-          <Typography sx={{ fontFamily: FONTS.sans }}>
-            {v.price} kr / night
-          </Typography>
-        )}
-
-        <Button
-          component={RouterLink}
-          to={`/venues/${v.id}`}
-          variant="elevated"
-          color="mint"
-          sx={{ mt: 1 }}
-        >
-          View venue
-        </Button>
+        <Stack alignItems="center" sx={{ mt: 1.5 }}>
+          <Button
+            component={RouterLink}
+            to={`/venues/${v.id}`}
+            variant="elevated"
+            color="mint"
+            sx={{ mt: 1 }}
+          >
+            View venue
+          </Button>
+        </Stack>
       </CardContent>
     </Card>
   );
