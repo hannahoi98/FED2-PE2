@@ -8,6 +8,7 @@ import {
   Alert,
   Avatar,
   Box,
+  Button,
   Card,
   CardContent,
   Divider,
@@ -16,6 +17,7 @@ import {
 } from "@mui/material";
 import BookingCard from "../components/profile/BookingItem";
 import { getProfileBookings } from "../api/bookings";
+import EditAvatar from "../components/profile/EditAvatar";
 
 export default function Profile() {
   const auth = loadAuth();
@@ -33,6 +35,8 @@ export default function Profile() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [bookingsLoading, setBookingsLoading] = useState(true);
   const [bookingsError, setBookingsError] = useState<string | null>(null);
+
+  const [editingAvatar, setEditingAvatar] = useState(false);
 
   useEffect(() => {
     if (!name || !token) return;
@@ -80,18 +84,44 @@ export default function Profile() {
           <Alert severity="error">{error}</Alert>
         ) : (
           <Stack spacing={2}>
-            <Stack spacing={1.5} alignItems="center" sx={{ pb: 4 }}>
+            <Stack spacing={2} alignItems="center" sx={{ pb: 4 }}>
               <Avatar
                 variant="rounded"
                 src={profile?.data.avatar?.url}
                 alt={profile?.data.avatar?.alt || profile?.data.name}
                 sx={{
-                  width: 112,
-                  height: 112,
-                  borderRadius: 4,
+                  width: 240,
+                  height: 240,
+                  borderRadius: 5,
                 }}
               />
               <Typography variant="h4">{profile?.data.name}</Typography>
+
+              <Button
+                variant="elevated"
+                color={editingAvatar ? "white" : "pine"}
+                onClick={() => setEditingAvatar((v) => !v)}
+                aria-expanded={editingAvatar}
+                aria-controls="edit-avatar-panel"
+              >
+                {editingAvatar ? "Close avatar form" : "Update avatar"}
+              </Button>
+
+              {editingAvatar && name && token && profile && (
+                <Box id="edit-avatar-panel">
+                  <EditAvatar
+                    username={name}
+                    token={token}
+                    initialUrl={profile.data.avatar?.url}
+                    initialAlt={profile.data.avatar?.alt}
+                    onClose={() => setEditingAvatar(false)}
+                    onSuccess={(updated) => {
+                      setEditingAvatar(false);
+                      setProfile(updated);
+                    }}
+                  />
+                </Box>
+              )}
             </Stack>
 
             <Typography variant="h5" sx={{ alignSelf: "flex-start" }}>

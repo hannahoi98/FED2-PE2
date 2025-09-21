@@ -42,6 +42,6 @@ export type AuthUser = {
   avatarUrl?: string;
 };
 
-export type UpdateProfile = {
+export type UpdateProfileInput = {
   avatar?: { url: string; alt?: string };
 };
