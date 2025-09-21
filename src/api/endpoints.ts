@@ -31,6 +31,9 @@ export function buildHeaders(token?: string): HeadersInit {
 export const PROFILE_URL = (name: string) =>
   `${BASE_API_URL}/holidaze/profiles/${encodeURIComponent(name)}`;
 
+export const PROFILE_BOOKINGS_URL = (name: string) =>
+  `${BASE_API_URL}/holidaze/profiles/${name}/bookings`;
+
 export function withQuery(
   url: string,
   params: Record<string, string | number | boolean | undefined>,
