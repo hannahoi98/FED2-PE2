@@ -1,5 +1,5 @@
 import { PROFILE_URL, withQuery, buildHeaders } from "./endpoints";
-import type { ApiErrorResponse } from "../types/auth";
+import type { ApiErrorResponse, UpdateProfileInput } from "../types/auth";
 
 export type ProfileResponse = {
   data: {
@@ -34,6 +34,30 @@ export async function getProfile(
       err.message ||
       err.errors?.[0]?.message ||
       `There was an issue fetching your profile. Please try again later (${res.status}).`;
+    throw new Error(msg);
+  }
+  return json as ProfileResponse;
+}
+
+export async function UpdateProfileInput(
+  username: string,
+  token: string,
+  data: UpdateProfileInput,
+): Promise<ProfileResponse> {
+  const res = await fetch(PROFILE_URL(username), {
+    method: "PUT",
+    headers: buildHeaders(token),
+    body: JSON.stringify(data),
+  });
+
+  const json = (await res.json()) as ProfileResponse | ApiErrorResponse;
+
+  if (!res.ok) {
+    const err = json as ApiErrorResponse;
+    const msg =
+      err.message ||
+      err.errors?.[0]?.message ||
+      `There was an issue updating your avatar. Please try again later (${res.status}).`;
     throw new Error(msg);
   }
   return json as ProfileResponse;
