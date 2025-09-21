@@ -17,3 +17,23 @@ export type CreateBookingSuccess = {
   };
   meta: Record<string, unknown>;
 };
+
+export type Booking = {
+  id: string;
+  dateFrom: string;
+  dateTo: string;
+  guests: number;
+  created: string;
+  updated: string;
+  venue?: {
+    id: string;
+    name: string;
+    media?: { url: string; alt?: string }[];
+    location?: { city?: string | null; country?: string | null };
+    price?: number;
+  };
+};
+
+export type ProfileBookingsResponse = {
+  data: Booking[];
+};
