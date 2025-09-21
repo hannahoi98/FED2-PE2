@@ -41,3 +41,7 @@ export type AuthUser = {
   venueManager: boolean;
   avatarUrl?: string;
 };
+
+export type UpdateProfile = {
+  avatar?: { url: string; alt?: string };
+};
