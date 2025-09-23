@@ -1,7 +1,7 @@
 import { loadAuth } from "../utils/authStorage";
 import { useEffect, useState } from "react";
 import { getProfile } from "../api/profile";
-import { Navigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import type { Booking } from "../types/bookings";
 import {
@@ -37,6 +37,8 @@ export default function Profile() {
   const [bookingsError, setBookingsError] = useState<string | null>(null);
 
   const [editingAvatar, setEditingAvatar] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!name || !token) return;
@@ -123,6 +125,16 @@ export default function Profile() {
                 </Box>
               )}
             </Stack>
+            {isManager && (
+              <Button
+                variant="elevated"
+                color="pine"
+                onClick={() => navigate("/venues/new")}
+                sx={{ mt: 1 }}
+              >
+                Create venue
+              </Button>
+            )}
 
             <Typography variant="h5" sx={{ alignSelf: "flex-start" }}>
               Your Bookings

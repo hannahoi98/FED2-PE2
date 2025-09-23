@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import SingleVenue from "./pages/SingleVenue";
 import BottomNav from "./components/BottomNav";
 import Profile from "./pages/Profile";
+import CreateVenuePage from "./pages/CreateVenue";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/venues/new" element={<CreateVenuePage />} />
           </Routes>
         </Container>
         <Box sx={{ display: { xs: "none", md: "block" } }}>
