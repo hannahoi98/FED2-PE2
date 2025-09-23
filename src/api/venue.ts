@@ -27,3 +27,19 @@ export async function CreateVenue<T = unknown>(
 
   return json as VenueResponse<T>;
 }
+
+export async function deleteVenue(id: string, token: string): Promise<void> {
+  const res = await fetch(`${ALL_VENUES_URL}/${id}`, {
+    method: "DELETE",
+    headers: buildHeaders(token),
+  });
+
+  if (!res.ok) {
+    const json = (await res.json()) as ApiErrorResponse | undefined;
+    const msg =
+      json?.errors?.[0]?.message ||
+      json?.message ||
+      `Delete failed (${res.status})`;
+    throw new Error(msg);
+  }
+}
