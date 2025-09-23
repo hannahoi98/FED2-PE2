@@ -66,35 +66,39 @@ export default function ManagerVenueCard({ venue, token, onDeleted }: Props) {
           </Alert>
         )}
 
-        <Stack>
+        <Stack alignItems="center" sx={{ mt: 1.5 }}>
           <Button
             component={RouterLink}
             to={`/venues/${venue.id}`}
             variant="elevated"
             color="mint"
             disabled={busy}
+            sx={{ width: 290 }}
           >
             View venue
           </Button>
-          <Button
-            component={RouterLink}
-            to={`/venues/${venue.id}/edit`}
-            variant="elevated"
-            color="white"
-            disabled={busy}
-            sx={{ width: 160 }}
-          >
-            Edit venue
-          </Button>
-          <Button
-            variant="elevated"
-            color="pine"
-            onClick={handleDelete}
-            disabled={busy}
-            sx={{ width: 160 }}
-          >
-            {busy ? "Deleting…" : "Delete"}
-          </Button>
+
+          <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+            <Button
+              component={RouterLink}
+              to={`/venues/${venue.id}/edit`}
+              variant="elevated"
+              color="pine"
+              disabled={busy}
+              sx={{ width: 140 }}
+            >
+              Edit venue
+            </Button>
+            <Button
+              variant="elevated"
+              color="white"
+              onClick={handleDelete}
+              disabled={busy}
+              sx={{ width: 140 }}
+            >
+              {busy ? "Deleting…" : "Delete"}
+            </Button>
+          </Stack>
         </Stack>
       </CardContent>
     </Card>

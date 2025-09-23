@@ -20,6 +20,7 @@ import { getProfileBookings } from "../api/bookings";
 import EditAvatar from "../components/profile/EditAvatar";
 import ManagerVenueCard from "../components/venue/ManagerVenueCard";
 import type { Venue } from "../types/venue";
+import { Add } from "@mui/icons-material";
 
 export default function Profile() {
   const auth = loadAuth();
@@ -129,21 +130,26 @@ export default function Profile() {
             </Stack>
             {isManager && (
               <>
-                <Button
-                  variant="elevated"
-                  color="pine"
-                  onClick={() => navigate("/venues/new")}
-                  sx={{ mt: 1 }}
+                <Box
+                  sx={{
+                    mt: 4,
+                    mb: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
                 >
-                  Create venue
-                </Button>
+                  <Typography variant="h5">My Venues</Typography>
 
-                <Typography
-                  variant="h5"
-                  sx={{ alignSelf: "flex-start", mt: 4 }}
-                >
-                  My Venues
-                </Typography>
+                  <Button
+                    variant="elevated"
+                    color="pine"
+                    onClick={() => navigate("/venues/new")}
+                    startIcon={<Add />}
+                  >
+                    Create venue
+                  </Button>
+                </Box>
                 <Divider sx={{ mb: 2 }} />
 
                 {profile?.data.venues && profile.data.venues.length > 0 ? (
