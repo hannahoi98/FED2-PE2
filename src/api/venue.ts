@@ -1,6 +1,13 @@
-import { ALL_VENUES_URL, SINGLE_VENUE_URL, buildHeaders } from "./endpoints";
+import {
+  ALL_VENUES_URL,
+  SINGLE_VENUE_URL,
+  PROFILE_BOOKINGS_URL,
+  buildHeaders,
+  withQuery,
+} from "./endpoints";
 import type { CreateVenueInput, UpdateVenueInput } from "../types/venue-input";
 import type { ApiErrorResponse } from "../types/auth";
+import type { VenueListResponse } from "../types/venue";
 
 /** Shape returned by venue endpoints: an object with a `data` field. */
 type VenueResponse<Data = unknown> = { data: Data };
@@ -113,4 +120,28 @@ export async function deleteVenue(id: string, token: string): Promise<void> {
       `Delete failed (${res.status})`;
     throw new Error(msg);
   }
+}
+
+export async function getProfileVenuesWithBookings(
+  name: string,
+  token: string,
+): Promise<VenueListResponse> {
+  const url = withQuery(PROFILE_BOOKINGS_URL(name), {
+    _bookings: true,
+    _customer: true,
+  });
+
+  const res = await fetch(url, { headers: buildHeaders(token) });
+  const json = await res.json();
+
+  if (!res.ok) {
+    const err = json as ApiErrorResponse;
+    const msg =
+      err.errors?.[0]?.message ||
+      err.message ||
+      `Failed to load bookings (${res.status})`;
+    throw new Error(msg);
+  }
+
+  return json as VenueListResponse;
 }
