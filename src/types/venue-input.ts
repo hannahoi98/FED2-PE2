@@ -18,3 +18,5 @@ export type CreateVenueInput = {
   meta?: VenueMeta;
   location: VenueLocationCreate;
 };
+
+export type UpdateVenueInput = CreateVenueInput;

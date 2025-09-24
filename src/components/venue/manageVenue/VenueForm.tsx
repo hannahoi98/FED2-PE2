@@ -18,15 +18,23 @@ import {
   Typography,
 } from "@mui/material";
 
+/** Props for VenueForm. */
 type Props = {
-  initial?: Partial<VenueFormState>;
+  /** Optional initial form values (e.g., for edit). */
+  initialValues?: VenueFormState;
+  /** Label for the submit button (default: "Save venue"). */
   submitLabel?: string;
+  /** Disables inputs/buttons while submitting. */
   submitting?: boolean;
+  /** Optional server error shown above the form. */
   serverError?: string | null;
+  /** Called with a validated form */
   onSubmit: (form: VenueFormState) => Promise<void> | void;
+  /** Optional cancel handler. */
   onCancel?: () => void;
 };
 
+/** Default values used when initialValues are not provided. */
 const defaultForm: VenueFormState = {
   name: "",
   description: "",
@@ -35,18 +43,18 @@ const defaultForm: VenueFormState = {
   media: [{ url: "", alt: "" }],
   meta: { wifi: false, parking: false, breakfast: false, pets: false },
   location: {
-    address: "",
     city: "",
-    zip: "",
     country: "",
     continent: "",
-    lat: "",
-    lng: "",
   },
 };
 
+/**
+ * Controlled form for creating or editing a venue.
+ * Validates via `validateVenueForm` and calls `onSubmit` when valid.
+ */
 export default function VenueForm({
-  initial,
+  initialValues,
   submitLabel = "Save venue",
   submitting = false,
   serverError,
@@ -55,10 +63,12 @@ export default function VenueForm({
 }: Props) {
   const [form, setForm] = useState<VenueFormState>({
     ...defaultForm,
-    ...initial,
-    meta: { ...defaultForm.meta, ...(initial?.meta ?? {}) },
-    location: { ...defaultForm.location, ...(initial?.location ?? {}) },
-    media: initial?.media?.length ? initial.media : defaultForm.media,
+    ...initialValues,
+    meta: { ...defaultForm.meta, ...(initialValues?.meta ?? {}) },
+    location: { ...defaultForm.location, ...(initialValues?.location ?? {}) },
+    media: initialValues?.media?.length
+      ? initialValues.media
+      : defaultForm.media,
   });
 
   const [errors, setErrors] = useState<VenueFormErrors>({});
@@ -110,7 +120,7 @@ export default function VenueForm({
 
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
-      <Stack>
+      <Stack spacing={3}>
         {(clientError || serverError) && (
           <Alert severity="error">{clientError || serverError}</Alert>
         )}
@@ -120,7 +130,7 @@ export default function VenueForm({
           value={form.name}
           onChange={(e) => setField("name")(e.target.value)}
           error={!!errors.name}
-          helperText={errors.name || "Please include a title for you venue"}
+          helperText={errors.name || "The title for you venue"}
           required
           fullWidth
         />
@@ -130,30 +140,28 @@ export default function VenueForm({
           value={form.description}
           onChange={(e) => setField("description")(e.target.value)}
           error={!!errors.description}
-          helperText={
-            errors.description || "Please include a description for you venue"
-          }
+          helperText={errors.description || "Description of your venue"}
           required
           fullWidth
           multiline
           minRows={4}
         />
 
-        <Stack>
+        <Stack spacing={2}>
           <Typography variant="h6">Images</Typography>
           {errors.media && <Alert severity="warning">{errors.media}</Alert>}
 
-          <Stack>
+          <Stack spacing={2}>
             {form.media.map((m, i) => {
               const itemErr = errors.mediaItems?.[i] ?? {};
               return (
-                <Stack key={i} spacing={1}>
+                <Stack key={i} spacing={2}>
                   <TextField
                     label="Image URL"
                     value={m.url}
                     onChange={(e) => setMediaField(i, "url", e.target.value)}
                     error={!!itemErr.url}
-                    helperText={itemErr.url || ""}
+                    helperText={itemErr.url || "Valid picture URL"}
                     required
                     fullWidth
                   />
@@ -162,7 +170,9 @@ export default function VenueForm({
                     value={m.alt}
                     onChange={(e) => setMediaField(i, "alt", e.target.value)}
                     error={!!itemErr.alt}
-                    helperText={itemErr.alt || ""}
+                    helperText={
+                      itemErr.alt || "Descriptive text for the picture"
+                    }
                     required
                     fullWidth
                   />
@@ -186,32 +196,35 @@ export default function VenueForm({
             color="mint"
             onClick={addMedia}
             disabled={submitting}
-            sx={{ alignSelf: "flex-start" }}
+            sx={{ alignSelf: "flex-start", width: 150 }}
           >
             Add another image
           </Button>
         </Stack>
-        <TextField
-          label="Price per night (kr)"
-          type="number"
-          value={form.price}
-          onChange={(e) => setField("price")(e.target.value)}
-          error={!!errors.price}
-          helperText={errors.price || ""}
-          required
-          fullWidth
-        />
+        <Stack spacing={2.5}>
+          <Typography variant="h6">Price and Guests</Typography>
+          <TextField
+            label="Price per night (kr)"
+            type="number"
+            value={form.price}
+            onChange={(e) => setField("price")(e.target.value)}
+            error={!!errors.price}
+            helperText={errors.price || "Price per night for your venue in NOK"}
+            required
+            fullWidth
+          />
 
-        <TextField
-          label="Max guests"
-          type="number"
-          value={form.maxGuests}
-          onChange={(e) => setField("maxGuests")(e.target.value)}
-          error={!!errors.maxGuests}
-          helperText={errors.maxGuests || ""}
-          required
-          fullWidth
-        />
+          <TextField
+            label="Max guests"
+            type="number"
+            value={form.maxGuests}
+            onChange={(e) => setField("maxGuests")(e.target.value)}
+            error={!!errors.maxGuests}
+            helperText={errors.maxGuests || "Max guests for your venue"}
+            required
+            fullWidth
+          />
+        </Stack>
         <Stack>
           <Typography variant="h6">Amenities</Typography>
           {(["wifi", "parking", "breakfast", "pets"] as const).map((key) => (
@@ -228,7 +241,8 @@ export default function VenueForm({
             </FormControl>
           ))}
         </Stack>
-        <Stack>
+        <Stack spacing={2.5}>
+          <Typography variant="h6">Location</Typography>
           <TextField
             label="City"
             value={form.location.city}
@@ -259,12 +273,13 @@ export default function VenueForm({
             fullWidth
           />
         </Stack>
-        <Stack>
+        <Stack alignItems="center" gap={1.5}>
           <Button
             type="submit"
             variant="elevated"
-            color="mint"
+            color="pine"
             disabled={submitting}
+            sx={{ width: 220 }}
           >
             {submitting ? "Saving…" : submitLabel}
           </Button>
@@ -274,6 +289,7 @@ export default function VenueForm({
               color="white"
               onClick={onCancel}
               disabled={submitting}
+              sx={{ width: 220 }}
             >
               Cancel
             </Button>
