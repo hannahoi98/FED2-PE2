@@ -1,7 +1,7 @@
 import {
   ALL_VENUES_URL,
   SINGLE_VENUE_URL,
-  PROFILE_BOOKINGS_URL,
+  PROFILE_VENUES_URL,
   buildHeaders,
   withQuery,
 } from "./endpoints";
@@ -126,7 +126,7 @@ export async function getProfileVenuesWithBookings(
   name: string,
   token: string,
 ): Promise<VenueListResponse> {
-  const url = withQuery(PROFILE_BOOKINGS_URL(name), {
+  const url = withQuery(PROFILE_VENUES_URL(name), {
     _bookings: true,
     _customer: true,
   });
