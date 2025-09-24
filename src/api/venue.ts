@@ -1,6 +1,6 @@
+import { ALL_VENUES_URL, SINGLE_VENUE_URL, buildHeaders } from "./endpoints";
 import type { CreateVenueInput, UpdateVenueInput } from "../types/venue-input";
 import type { ApiErrorResponse } from "../types/auth";
-import { ALL_VENUES_URL, SINGLE_VENUE_URL, buildHeaders } from "./endpoints";
 
 /** Shape returned by venue endpoints: an object with a `data` field. */
 type VenueResponse<Data = unknown> = { data: Data };

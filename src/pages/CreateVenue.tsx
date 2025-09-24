@@ -1,9 +1,5 @@
-import { loadAuth } from "../utils/authStorage";
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import type { Venue } from "../types/venue";
-import { CreateVenue as createVenueApi } from "../api/venue";
-import { toCreateVenueData, type VenueFormState } from "../utils/validation";
 import {
   Alert,
   Card,
@@ -13,6 +9,10 @@ import {
   Stack,
 } from "@mui/material";
 import VenueForm from "../components/venue/manageVenue/VenueForm";
+import { loadAuth } from "../utils/authStorage";
+import { CreateVenue as createVenueApi } from "../api/venue";
+import { toCreateVenueData, type VenueFormState } from "../utils/validation";
+import type { Venue } from "../types/venue";
 
 /**
  * CreateVenuePage

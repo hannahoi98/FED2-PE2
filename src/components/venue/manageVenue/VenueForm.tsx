@@ -1,8 +1,3 @@
-import type {
-  VenueFormState,
-  VenueFormErrors,
-} from "../../../utils/validation";
-import { validateVenueForm } from "../../../utils/validation";
 import { useState } from "react";
 import {
   Alert,
@@ -17,6 +12,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { validateVenueForm } from "../../../utils/validation";
+import type {
+  VenueFormState,
+  VenueFormErrors,
+} from "../../../utils/validation";
 
 /** Props for VenueForm. */
 type Props = {

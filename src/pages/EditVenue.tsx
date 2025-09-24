@@ -1,11 +1,5 @@
-import { loadAuth } from "../utils/authStorage";
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import type { Venue } from "../types/venue";
-import Loader from "../components/Loader";
-import { getVenue, updateVenue } from "../api/venue";
-import { toCreateVenueData, type VenueFormState } from "../utils/validation";
-import { toVenueFormState } from "../utils/venueTransformers";
 import {
   Alert,
   Card,
@@ -15,6 +9,12 @@ import {
   Stack,
 } from "@mui/material";
 import VenueForm from "../components/venue/manageVenue/VenueForm";
+import Loader from "../components/Loader";
+import { loadAuth } from "../utils/authStorage";
+import { getVenue, updateVenue } from "../api/venue";
+import { toVenueFormState } from "../utils/venueTransformers";
+import { toCreateVenueData, type VenueFormState } from "../utils/validation";
+import type { Venue } from "../types/venue";
 
 /**
  * EditVenuePage
