@@ -1,7 +1,7 @@
 import { loadAuth } from "../utils/authStorage";
 import { useEffect, useState } from "react";
 import { getProfile } from "../api/profile";
-import { Navigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import type { Booking } from "../types/bookings";
 import {
@@ -18,6 +18,9 @@ import {
 import BookingCard from "../components/profile/BookingItem";
 import { getProfileBookings } from "../api/bookings";
 import EditAvatar from "../components/profile/EditAvatar";
+import ManagerVenueCard from "../components/venue/ManagerVenueCard";
+import type { Venue } from "../types/venue";
+import { Add } from "@mui/icons-material";
 
 export default function Profile() {
   const auth = loadAuth();
@@ -37,6 +40,8 @@ export default function Profile() {
   const [bookingsError, setBookingsError] = useState<string | null>(null);
 
   const [editingAvatar, setEditingAvatar] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!name || !token) return;
@@ -123,6 +128,73 @@ export default function Profile() {
                 </Box>
               )}
             </Stack>
+            {isManager && (
+              <>
+                <Box
+                  sx={{
+                    mt: 4,
+                    mb: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Typography variant="h5">My Venues</Typography>
+
+                  <Button
+                    variant="elevated"
+                    color="pine"
+                    onClick={() => navigate("/venues/new")}
+                    startIcon={<Add />}
+                  >
+                    Create venue
+                  </Button>
+                </Box>
+                <Divider sx={{ mb: 2 }} />
+
+                {profile?.data.venues && profile.data.venues.length > 0 ? (
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: {
+                        xs: "1fr",
+                        sm: "1fr 1fr",
+                        md: "1fr 1fr 1fr",
+                      },
+                      gap: 2,
+                    }}
+                  >
+                    {(profile.data.venues as Venue[]).map((v) => (
+                      <Box key={v.id}>
+                        <ManagerVenueCard
+                          venue={v}
+                          token={auth!.accessToken}
+                          onDeleted={(id) =>
+                            setProfile((prev) =>
+                              prev
+                                ? {
+                                    ...prev,
+                                    data: {
+                                      ...prev.data,
+                                      venues: (
+                                        prev.data.venues as Venue[]
+                                      ).filter((x) => x.id !== id),
+                                    },
+                                  }
+                                : prev,
+                            )
+                          }
+                        />
+                      </Box>
+                    ))}
+                  </Box>
+                ) : (
+                  <Alert severity="info">
+                    You haven’t created any venues yet.
+                  </Alert>
+                )}
+              </>
+            )}
 
             <Typography variant="h5" sx={{ alignSelf: "flex-start" }}>
               Your Bookings
