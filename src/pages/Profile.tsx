@@ -13,6 +13,8 @@ import {
   CardContent,
   Divider,
   Stack,
+  Tab,
+  Tabs,
   Typography,
 } from "@mui/material";
 import BookingCard from "../components/profile/BookingItem";
@@ -21,6 +23,7 @@ import EditAvatar from "../components/profile/EditAvatar";
 import ManagerVenueCard from "../components/venue/ManagerVenueCard";
 import type { Venue } from "../types/venue";
 import { Add } from "@mui/icons-material";
+import { COLORS, FONTS } from "../theme";
 
 export default function Profile() {
   const auth = loadAuth();
@@ -40,6 +43,9 @@ export default function Profile() {
   const [bookingsError, setBookingsError] = useState<string | null>(null);
 
   const [editingAvatar, setEditingAvatar] = useState(false);
+
+  const [tab, setTab] = useState(0);
+  const handleTabChange = (_: unknown, newVal: number) => setTab(newVal);
 
   const navigate = useNavigate();
 
@@ -128,31 +134,84 @@ export default function Profile() {
                 </Box>
               )}
             </Stack>
-            {isManager && (
-              <>
-                <Box
+            {isManager ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-end",
+                  justifyContent: "space-between",
+                  borderBottom: `1px solid ${COLORS.mint}`,
+                  mb: 2,
+                }}
+              >
+                <Tabs
+                  value={tab}
+                  onChange={handleTabChange}
+                  aria-label="Profile sections"
                   sx={{
-                    mt: 4,
-                    mb: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
+                    minHeight: 44,
+                    "& .MuiTabs-indicator": {
+                      backgroundColor: COLORS.pine,
+                      height: 3,
+                      borderRadius: 2,
+                    },
+                    "& .MuiTab-root": {
+                      minHeight: 44,
+                      paddingX: 0,
+                      mr: 4,
+                      textTransform: "none",
+                      fontFamily: FONTS.serif,
+                      fontSize: 24,
+                      color: COLORS.pine,
+                      opacity: 0.75,
+                    },
+                    "& .MuiTab-root.Mui-selected": {
+                      color: COLORS.pine,
+                      opacity: 1,
+                    },
                   }}
                 >
-                  <Typography variant="h5">My Venues</Typography>
-
+                  <Tab
+                    label="Your Venues"
+                    id="profile-tab-venues"
+                    aria-controls="profile-panel-venues"
+                  />
+                  <Tab
+                    label="Your Bookings"
+                    id="profile-tab-bookings"
+                    aria-controls="profile-panel-bookings"
+                  />
+                </Tabs>
+                {tab === 0 && (
                   <Button
                     variant="elevated"
                     color="pine"
                     onClick={() => navigate("/venues/new")}
                     startIcon={<Add />}
+                    sx={{ mb: 0.5 }}
                   >
                     Create venue
                   </Button>
-                </Box>
-                <Divider sx={{ mb: 2 }} />
-
-                {profile?.data.venues && profile.data.venues.length > 0 ? (
+                )}
+              </Box>
+            ) : (
+              <Box sx={{ borderBottom: `1px solid ${COLORS.mint}`, mb: 2 }}>
+                <Typography
+                  variant="h5"
+                  sx={{ fontFamily: FONTS.serif, pb: 1 }}
+                >
+                  Your bookings
+                </Typography>
+              </Box>
+            )}
+            {isManager && tab === 0 && (
+              <Box
+                role="tabpanel"
+                id="profile-panel-venues"
+                aria-labelledby="profile-tab-venues"
+              >
+                {profile?.data.venues &&
+                (profile.data.venues as Venue[])?.length > 0 ? (
                   <Box
                     sx={{
                       display: "grid",
@@ -193,36 +252,53 @@ export default function Profile() {
                     You haven’t created any venues yet.
                   </Alert>
                 )}
-              </>
+              </Box>
             )}
-
-            <Typography variant="h5" sx={{ alignSelf: "flex-start" }}>
-              Your Bookings
-            </Typography>
-            <Divider />
-            {bookingsLoading ? (
-              <Loader minHeight={160} />
-            ) : bookingsError ? (
-              <Alert severity="error">{bookingsError}</Alert>
-            ) : bookings.length === 0 ? (
-              <Alert severity="info">You don’t have any bookings yet.</Alert>
-            ) : (
+            {(isManager ? tab === 1 : true) && (
               <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: {
-                    xs: "1fr",
-                    sm: "1fr 1fr",
-                    md: "1fr 1fr 1fr",
-                  },
-                  gap: 2,
-                }}
+                role="tabpanel"
+                id="profile-panel-bookings"
+                aria-labelledby="profile-tab-bookings"
               >
-                {bookings.map((b) => (
-                  <Box key={b.id}>
-                    <BookingCard booking={b} />
+                {!isManager && (
+                  <>
+                    <Typography
+                      variant="h5"
+                      sx={{ alignSelf: "flex-start", mb: 1 }}
+                    >
+                      Your bookings
+                    </Typography>
+                    <Divider sx={{ mb: 2 }} />
+                  </>
+                )}
+
+                {bookingsLoading ? (
+                  <Loader minHeight={160} />
+                ) : bookingsError ? (
+                  <Alert severity="error">{bookingsError}</Alert>
+                ) : bookings.length === 0 ? (
+                  <Alert severity="info">
+                    You don’t have any bookings yet.
+                  </Alert>
+                ) : (
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: {
+                        xs: "1fr",
+                        sm: "1fr 1fr",
+                        md: "1fr 1fr 1fr",
+                      },
+                      gap: 2,
+                    }}
+                  >
+                    {bookings.map((b) => (
+                      <Box key={b.id}>
+                        <BookingCard booking={b} />
+                      </Box>
+                    ))}
                   </Box>
-                ))}
+                )}
               </Box>
             )}
           </Stack>
