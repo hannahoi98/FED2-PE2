@@ -59,7 +59,6 @@ export default function ManagerVenueCard({ venue, token, onDeleted }: Props) {
           width: "100%",
           height: "auto",
           objectFit: "cover",
-          display: "block",
         }}
       />
       <CardContent sx={{ p: { xs: 2, sm: 2.5 } }}>

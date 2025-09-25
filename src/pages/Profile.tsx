@@ -129,7 +129,7 @@ export default function Profile() {
                 sx={{
                   width: 240,
                   height: 240,
-                  borderRadius: 5,
+                  borderRadius: 2,
                 }}
               />
               <Typography variant="h4">{profile?.data.name}</Typography>

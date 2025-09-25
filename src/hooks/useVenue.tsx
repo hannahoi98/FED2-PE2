@@ -1,5 +1,5 @@
 import type { Venue } from "../types/venue";
-import { SINGLE_VENUE_WITH_BOOKINGS_URL } from "../api/endpoints";
+import { SINGLE_VENUE_URL, withQuery } from "../api/endpoints";
 import { useState, useEffect } from "react";
 
 type SingleVenueResponse = { data: Venue };
@@ -17,7 +17,13 @@ export function useVenue(id: string | undefined, preloaded?: Venue | null) {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(SINGLE_VENUE_WITH_BOOKINGS_URL(id));
+
+        const url = withQuery(SINGLE_VENUE_URL(id), {
+          _owner: true,
+          _bookings: true,
+        });
+
+        const res = await fetch(url);
         if (!res.ok) throw new Error(`Failed to load venue (${res.status})`);
         const json: SingleVenueResponse = await res.json();
         if (!cancelled) setVenue(json.data);
