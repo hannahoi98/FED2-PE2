@@ -114,7 +114,7 @@ export default function Profile() {
 
   return (
     <Card>
-      <CardContent sx={{ p: { xs: 3, sm: 4, md: 5 } }}>
+      <CardContent sx={{ p: { xs: 2, sm: 4, md: 5 } }}>
         {loading ? (
           <Loader message="Loading your profile…" minHeight={320} />
         ) : error ? (
@@ -163,19 +163,44 @@ export default function Profile() {
             {isManager ? (
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "flex-end",
-                  justifyContent: "space-between",
+                  display: "grid",
+                  gridTemplateColumns: { xs: "1fr", sm: "1fr auto" },
+                  alignItems: "end",
+                  gap: 1,
                   borderBottom: `1px solid ${COLORS.mint}`,
                   mb: 2,
                 }}
               >
+                <Box
+                  sx={{
+                    order: { xs: 1, sm: 2 },
+                    display: "flex",
+                    justifyContent: { xs: "flex-end", sm: "flex-end" },
+                    mb: { xs: 1, sm: 0 },
+                  }}
+                >
+                  {tab === 0 && (
+                    <Button
+                      variant="elevated"
+                      color="pine"
+                      startIcon={<Add />}
+                      onClick={() => navigate("/venues/new")}
+                      sx={{ width: { xs: "100%", sm: "auto" }, mb: 1 }}
+                    >
+                      Create venue
+                    </Button>
+                  )}
+                </Box>
+
                 <Tabs
                   value={tab}
                   onChange={handleTabChange}
                   aria-label="Profile sections"
                   sx={{
+                    order: { xs: 2, sm: 1 },
                     minHeight: 44,
+                    justifySelf: { xs: "center", sm: "start" },
+                    width: "100%",
                     "& .MuiTabs-indicator": {
                       backgroundColor: COLORS.pine,
                       height: 3,
@@ -183,11 +208,11 @@ export default function Profile() {
                     },
                     "& .MuiTab-root": {
                       minHeight: 44,
-                      paddingX: 0,
-                      mr: 4,
+                      px: 0,
+                      mr: { xs: 2, sm: 4 },
                       textTransform: "none",
                       fontFamily: FONTS.serif,
-                      fontSize: 24,
+                      fontSize: { xs: 18, sm: 24 },
                       color: COLORS.pine,
                       opacity: 0.75,
                     },
@@ -208,17 +233,6 @@ export default function Profile() {
                     aria-controls="profile-panel-bookings"
                   />
                 </Tabs>
-                {tab === 0 && (
-                  <Button
-                    variant="elevated"
-                    color="pine"
-                    onClick={() => navigate("/venues/new")}
-                    startIcon={<Add />}
-                    sx={{ mb: 0.5 }}
-                  >
-                    Create venue
-                  </Button>
-                )}
               </Box>
             ) : (
               <Box sx={{ borderBottom: `1px solid ${COLORS.mint}`, mb: 2 }}>
@@ -244,14 +258,14 @@ export default function Profile() {
                         display: "grid",
                         gridTemplateColumns: {
                           xs: "1fr",
-                          sm: "1fr 1fr",
-                          md: "1fr 1fr 1fr",
+                          sm: "repeat(2, minmax(0,1fr))",
+                          md: "repeat(3, minmax(0,1fr))",
                         },
                         gap: 2,
                       }}
                     >
                       {(profile.data.venues as Venue[]).map((v) => (
-                        <Box key={v.id}>
+                        <Box key={v.id} sx={{ minWidth: 0 }}>
                           <ManagerVenueCard
                             venue={v}
                             token={auth!.accessToken}

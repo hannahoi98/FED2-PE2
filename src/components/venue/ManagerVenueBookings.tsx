@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { Alert, Divider, Stack, Box, Typography } from "@mui/material";
 import type { Venue, VenueBooking } from "../../types/venue";
 import Loader from "../Loader";
-import { FONTS } from "../../theme";
+import { COLORS, FONTS } from "../../theme";
 
 export type ManagerVenueBookingRow = {
   venue: Venue;
@@ -81,12 +81,13 @@ function BookingRow({
     <Box
       sx={{
         display: "grid",
-        gridTemplateColumns: { xs: "64px 1fr", sm: "80px 1fr 200px" },
-        alignItems: "center",
-        gap: 2,
-        p: 1.5,
-        border: "1px solid #e0e0e0",
-        borderRadius: 1.5,
+        gridTemplateColumns: { xs: "1fr", sm: "80px 1fr 200px" },
+        alignItems: { xs: "stretch", sm: "center" },
+        gap: { xs: 1, sm: 2 },
+        border: `1px solid ${COLORS.mint}`,
+        overflow: "hidden",
+        p: { xs: 0, sm: 1.5 },
+        borderRadius: 2,
       }}
     >
       <Box
@@ -94,13 +95,13 @@ function BookingRow({
         src={img}
         alt={alt}
         sx={{
-          width: { xs: 64, sm: 80 },
-          height: { xs: 64, sm: 80 },
+          display: "block",
+          width: { xs: "100%", sm: 80 },
+          height: { xs: 160, sm: "100%" },
           objectFit: "cover",
-          borderRadius: 1,
         }}
       />
-      <Box>
+      <Box sx={{ px: { xs: 1.5, sm: 0 }, py: { xs: 1.25, sm: 0 } }}>
         <Typography sx={{ fontSize: 18 }}>{venue.name}</Typography>
         <Typography fontFamily={FONTS.sans}>
           {from.format("DD/MM/YY")} – {to.format("DD/MM/YY")} • Guests:{" "}
@@ -109,7 +110,14 @@ function BookingRow({
         <Typography fontFamily={FONTS.sans}>Customer: {guestName}</Typography>
       </Box>
 
-      <Box sx={{ justifySelf: { sm: "end" } }}>
+      <Box
+        sx={{
+          justifySelf: { sm: "end" },
+          textAlign: { xs: "left", sm: "right" },
+          px: { xs: 1.5, sm: 0 },
+          py: { xs: 1.25, sm: 0 },
+        }}
+      >
         <Typography fontFamily={FONTS.sans} sx={{ fontWeight: 600 }}>
           Total: {total} kr
         </Typography>
