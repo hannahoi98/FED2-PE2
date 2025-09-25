@@ -3,6 +3,7 @@ import { deleteVenue } from "../../api/venue";
 import type { Venue } from "../../types/venue";
 import {
   Alert,
+  Box,
   Button,
   Card,
   CardMedia,
@@ -11,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+import { COLORS } from "../../theme";
 
 type Props = {
   venue: Venue;
@@ -41,7 +43,13 @@ export default function ManagerVenueCard({ venue, token, onDeleted }: Props) {
   }
 
   return (
-    <Card>
+    <Card
+      sx={{
+        border: `1px solid ${COLORS.mint}`,
+        borderRadius: 2,
+        overflow: "hidden",
+      }}
+    >
       <CardMedia
         component="img"
         image={firstImage}
@@ -53,39 +61,37 @@ export default function ManagerVenueCard({ venue, token, onDeleted }: Props) {
           objectFit: "cover",
         }}
       />
-      <CardContent>
-        <Stack>
-          <Typography component="h3" variant="h6">
+      <CardContent sx={{ p: { xs: 2, sm: 2.5 } }}>
+        <Stack spacing={1} alignItems="stretch">
+          <Typography component="h3" variant="h6" sx={{ textAlign: "center" }}>
             {venue.name}
           </Typography>
-        </Stack>
 
-        {error && (
-          <Alert sx={{ mt: 1 }} severity="error">
-            {error}
-          </Alert>
-        )}
+          {error && (
+            <Alert sx={{ mt: 1 }} severity="error">
+              {error}
+            </Alert>
+          )}
 
-        <Stack alignItems="center" sx={{ mt: 1.5 }}>
           <Button
             component={RouterLink}
             to={`/venues/${venue.id}`}
             variant="elevated"
             color="mint"
             disabled={busy}
-            sx={{ width: 290 }}
+            sx={{ flex: 1, width: { xs: "100%", sm: "auto" } }}
           >
             View venue
           </Button>
 
-          <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+          <Box sx={{ display: "flex", gap: 1 }}>
             <Button
               component={RouterLink}
               to={`/venues/${venue.id}/edit`}
               variant="elevated"
               color="pine"
               disabled={busy}
-              sx={{ width: 140 }}
+              sx={{ flex: 1 }}
             >
               Edit venue
             </Button>
@@ -94,11 +100,11 @@ export default function ManagerVenueCard({ venue, token, onDeleted }: Props) {
               color="white"
               onClick={handleDelete}
               disabled={busy}
-              sx={{ width: 140 }}
+              sx={{ flex: 1 }}
             >
               {busy ? "Deleting…" : "Delete"}
             </Button>
-          </Stack>
+          </Box>
         </Stack>
       </CardContent>
     </Card>

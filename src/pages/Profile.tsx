@@ -4,6 +4,7 @@ import { getProfile } from "../api/profile";
 import { useNavigate, Navigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import type { Booking } from "../types/bookings";
+import { Add } from "@mui/icons-material";
 import {
   Alert,
   Avatar,
@@ -11,18 +12,20 @@ import {
   Button,
   Card,
   CardContent,
-  Divider,
   Stack,
   Tab,
   Tabs,
   Typography,
 } from "@mui/material";
 import BookingCard from "../components/profile/BookingItem";
+import ManagerVenueBookings from "../components/venue/ManagerVenueBookings";
 import { getProfileBookings } from "../api/bookings";
 import EditAvatar from "../components/profile/EditAvatar";
 import ManagerVenueCard from "../components/venue/ManagerVenueCard";
+import { getProfileVenuesWithBookings } from "../api/venue";
+import { venuesToManagerRows } from "../utils/managerBookings";
+import type { ManagerVenueBookingRow } from "../components/venue/ManagerVenueBookings";
 import type { Venue } from "../types/venue";
-import { Add } from "@mui/icons-material";
 import { COLORS, FONTS } from "../theme";
 
 export default function Profile() {
@@ -46,6 +49,10 @@ export default function Profile() {
 
   const [tab, setTab] = useState(0);
   const handleTabChange = (_: unknown, newVal: number) => setTab(newVal);
+
+  const [mvbLoading, setMvbLoading] = useState(false);
+  const [mvbError, setMvbError] = useState<string | null>(null);
+  const [mvbRows, setMvbRows] = useState<ManagerVenueBookingRow[]>([]);
 
   const navigate = useNavigate();
 
@@ -84,11 +91,30 @@ export default function Profile() {
     })();
   }, [name, token]);
 
+  useEffect(() => {
+    if (!isManager || !name || !token) return;
+    (async () => {
+      try {
+        setMvbError(null);
+        setMvbLoading(true);
+        const { data: venues } = await getProfileVenuesWithBookings(
+          name,
+          token,
+        );
+        setMvbRows(venuesToManagerRows(venues));
+      } catch (e: unknown) {
+        setMvbError(e instanceof Error ? e.message : "Failed to load bookings");
+      } finally {
+        setMvbLoading(false);
+      }
+    })();
+  }, [isManager, name, token]);
+
   if (!auth) return <Navigate to="/auth/login" replace />;
 
   return (
     <Card>
-      <CardContent sx={{ p: { xs: 3, sm: 4, md: 5 } }}>
+      <CardContent sx={{ p: { xs: 2, sm: 4, md: 5 } }}>
         {loading ? (
           <Loader message="Loading your profile…" minHeight={320} />
         ) : error ? (
@@ -103,7 +129,7 @@ export default function Profile() {
                 sx={{
                   width: 240,
                   height: 240,
-                  borderRadius: 5,
+                  borderRadius: 2,
                 }}
               />
               <Typography variant="h4">{profile?.data.name}</Typography>
@@ -137,19 +163,44 @@ export default function Profile() {
             {isManager ? (
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "flex-end",
-                  justifyContent: "space-between",
+                  display: "grid",
+                  gridTemplateColumns: { xs: "1fr", sm: "1fr auto" },
+                  alignItems: "end",
+                  gap: 1,
                   borderBottom: `1px solid ${COLORS.mint}`,
                   mb: 2,
                 }}
               >
+                <Box
+                  sx={{
+                    order: { xs: 1, sm: 2 },
+                    display: "flex",
+                    justifyContent: { xs: "flex-end", sm: "flex-end" },
+                    mb: { xs: 1, sm: 0 },
+                  }}
+                >
+                  {tab === 0 && (
+                    <Button
+                      variant="elevated"
+                      color="pine"
+                      startIcon={<Add />}
+                      onClick={() => navigate("/venues/new")}
+                      sx={{ width: { xs: "100%", sm: "auto" }, mb: 1 }}
+                    >
+                      Create venue
+                    </Button>
+                  )}
+                </Box>
+
                 <Tabs
                   value={tab}
                   onChange={handleTabChange}
                   aria-label="Profile sections"
                   sx={{
+                    order: { xs: 2, sm: 1 },
                     minHeight: 44,
+                    justifySelf: { xs: "center", sm: "start" },
+                    width: "100%",
                     "& .MuiTabs-indicator": {
                       backgroundColor: COLORS.pine,
                       height: 3,
@@ -157,11 +208,11 @@ export default function Profile() {
                     },
                     "& .MuiTab-root": {
                       minHeight: 44,
-                      paddingX: 0,
-                      mr: 4,
+                      px: 0,
+                      mr: { xs: 2, sm: 4 },
                       textTransform: "none",
                       fontFamily: FONTS.serif,
-                      fontSize: 24,
+                      fontSize: { xs: 18, sm: 24 },
                       color: COLORS.pine,
                       opacity: 0.75,
                     },
@@ -182,17 +233,6 @@ export default function Profile() {
                     aria-controls="profile-panel-bookings"
                   />
                 </Tabs>
-                {tab === 0 && (
-                  <Button
-                    variant="elevated"
-                    color="pine"
-                    onClick={() => navigate("/venues/new")}
-                    startIcon={<Add />}
-                    sx={{ mb: 0.5 }}
-                  >
-                    Create venue
-                  </Button>
-                )}
               </Box>
             ) : (
               <Box sx={{ borderBottom: `1px solid ${COLORS.mint}`, mb: 2 }}>
@@ -205,54 +245,65 @@ export default function Profile() {
               </Box>
             )}
             {isManager && tab === 0 && (
-              <Box
-                role="tabpanel"
-                id="profile-panel-venues"
-                aria-labelledby="profile-tab-venues"
-              >
-                {profile?.data.venues &&
-                (profile.data.venues as Venue[])?.length > 0 ? (
-                  <Box
-                    sx={{
-                      display: "grid",
-                      gridTemplateColumns: {
-                        xs: "1fr",
-                        sm: "1fr 1fr",
-                        md: "1fr 1fr 1fr",
-                      },
-                      gap: 2,
-                    }}
-                  >
-                    {(profile.data.venues as Venue[]).map((v) => (
-                      <Box key={v.id}>
-                        <ManagerVenueCard
-                          venue={v}
-                          token={auth!.accessToken}
-                          onDeleted={(id) =>
-                            setProfile((prev) =>
-                              prev
-                                ? {
-                                    ...prev,
-                                    data: {
-                                      ...prev.data,
-                                      venues: (
-                                        prev.data.venues as Venue[]
-                                      ).filter((x) => x.id !== id),
-                                    },
-                                  }
-                                : prev,
-                            )
-                          }
-                        />
-                      </Box>
-                    ))}
-                  </Box>
-                ) : (
-                  <Alert severity="info">
-                    You haven’t created any venues yet.
-                  </Alert>
-                )}
-              </Box>
+              <>
+                <Box
+                  role="tabpanel"
+                  id="profile-panel-venues"
+                  aria-labelledby="profile-tab-venues"
+                >
+                  {profile?.data.venues &&
+                  (profile.data.venues as Venue[])?.length > 0 ? (
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: {
+                          xs: "1fr",
+                          sm: "repeat(2, minmax(0,1fr))",
+                          md: "repeat(3, minmax(0,1fr))",
+                        },
+                        gap: 2,
+                      }}
+                    >
+                      {(profile.data.venues as Venue[]).map((v) => (
+                        <Box key={v.id} sx={{ minWidth: 0 }}>
+                          <ManagerVenueCard
+                            venue={v}
+                            token={auth!.accessToken}
+                            onDeleted={(id) =>
+                              setProfile((prev) =>
+                                prev
+                                  ? {
+                                      ...prev,
+                                      data: {
+                                        ...prev.data,
+                                        venues: (
+                                          prev.data.venues as Venue[]
+                                        ).filter((x) => x.id !== id),
+                                      },
+                                    }
+                                  : prev,
+                              )
+                            }
+                          />
+                        </Box>
+                      ))}
+                    </Box>
+                  ) : (
+                    <Alert severity="info">
+                      You haven’t created any venues yet.
+                    </Alert>
+                  )}
+                </Box>
+
+                <Box sx={{ mt: 3 }}>
+                  <ManagerVenueBookings
+                    rows={mvbRows}
+                    loading={mvbLoading}
+                    error={mvbError}
+                    title="Bookings on Your Venues"
+                  />
+                </Box>
+              </>
             )}
             {(isManager ? tab === 1 : true) && (
               <Box
@@ -260,18 +311,6 @@ export default function Profile() {
                 id="profile-panel-bookings"
                 aria-labelledby="profile-tab-bookings"
               >
-                {!isManager && (
-                  <>
-                    <Typography
-                      variant="h5"
-                      sx={{ alignSelf: "flex-start", mb: 1 }}
-                    >
-                      Your bookings
-                    </Typography>
-                    <Divider sx={{ mb: 2 }} />
-                  </>
-                )}
-
                 {bookingsLoading ? (
                   <Loader minHeight={160} />
                 ) : bookingsError ? (

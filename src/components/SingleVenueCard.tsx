@@ -22,21 +22,25 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { createBooking } from "../api/bookings";
 import { Link as RouterLink } from "react-router-dom";
+import { loadAuth } from "../utils/authStorage";
 
 type Props = {
   venue: Venue;
-  isAuthenticated?: boolean;
-  isCustomer?: boolean;
-  token?: string;
 };
 
-export default function SingleVenueCard({
-  venue,
-  isAuthenticated = false,
-  isCustomer = false,
-  token = "",
-}: Props) {
+export default function SingleVenueCard({ venue }: Props) {
   const navigate = useNavigate();
+
+  const auth = loadAuth();
+  const token = auth?.accessToken ?? "";
+
+  type VenueWithOwner = Venue & { owner?: { name?: string } };
+  const ownerName = (venue as VenueWithOwner).owner?.name;
+
+  const isAuthenticated = !!auth;
+  const isManager = !!auth?.venueManager;
+  const isOwner = ownerName === auth?.name;
+  const roleAllowsBooking = !isManager || (isManager && !isOwner);
 
   const firstImage = venue.media?.[0]?.url ?? " ";
   const firstAlt = venue.media?.[0]?.alt ?? venue.name;
@@ -63,6 +67,9 @@ export default function SingleVenueCard({
   const canSelectDates = Boolean(checkIn && checkOut);
   const canBook = canSelectDates && guests > 0 && guests <= venue.maxGuests;
 
+  const canSubmit =
+    isAuthenticated && roleAllowsBooking && canBook && !submitting;
+
   const onBookClick = async () => {
     setServerError(null);
     setServerSuccess(null);
@@ -72,8 +79,8 @@ export default function SingleVenueCard({
       return;
     }
 
-    if (!isCustomer) {
-      setServerError("Only customers can book a venue.");
+    if (!roleAllowsBooking) {
+      setServerError("You can’t book your own venue.");
       return;
     }
 
@@ -327,13 +334,13 @@ export default function SingleVenueCard({
                 variant="elevated"
                 color="pine"
                 onClick={onBookClick}
-                disabled={!canBook || submitting}
+                disabled={!canSubmit}
                 sx={{ width: 200 }}
               >
                 {!isAuthenticated
                   ? "Login to book"
-                  : !isCustomer
-                    ? "Only customers can book"
+                  : isManager && isOwner
+                    ? "This is your venue"
                     : submitting
                       ? "Booking…"
                       : canBook
@@ -349,6 +356,11 @@ export default function SingleVenueCard({
               >
                 Back to all venues
               </Button>
+              {isAuthenticated && isManager && isOwner && (
+                <Alert severity="info" sx={{ mt: 1 }}>
+                  You can’t book your own venue.
+                </Alert>
+              )}
             </Stack>
           </Stack>
         </Box>

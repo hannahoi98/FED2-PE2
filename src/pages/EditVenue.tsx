@@ -8,7 +8,7 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
-import VenueForm from "../components/venue/manageVenue/VenueForm";
+import VenueForm from "../components/venue/VenueForm";
 import Loader from "../components/Loader";
 import { loadAuth } from "../utils/authStorage";
 import { getVenue, updateVenue } from "../api/venue";

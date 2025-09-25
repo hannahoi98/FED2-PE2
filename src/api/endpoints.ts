@@ -45,3 +45,6 @@ export function withQuery(
   const qs = q.toString();
   return qs ? `${url}?${qs}` : url;
 }
+
+export const PROFILE_VENUES_URL = (name: string) =>
+  `${BASE_API_URL}/holidaze/profiles/${encodeURIComponent(name)}/venues`;
