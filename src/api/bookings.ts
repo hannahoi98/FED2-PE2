@@ -1,11 +1,19 @@
+import { BOOKINGS_URL, buildHeaders, PROFILE_BOOKINGS_URL } from "./endpoints";
+import type { ApiErrorResponse } from "../types/auth";
+import type { ProfileBookingsResponse } from "../types/bookings";
 import type {
   CreateBookingInput,
   CreateBookingSuccess,
 } from "../types/bookings";
-import { BOOKINGS_URL, buildHeaders, PROFILE_BOOKINGS_URL } from "./endpoints";
-import type { ApiErrorResponse } from "../types/auth";
-import type { ProfileBookingsResponse } from "../types/bookings";
 
+/**
+ * Create a booking for a venue.
+ *
+ * @param data Booking payload (dates are ISO strings)
+ * @param token Auth token
+ * @returns The created booking
+ * @throws Error with a readable message if the server responds with an error
+ */
 export async function createBooking(
   data: CreateBookingInput,
   token: string,
@@ -28,6 +36,14 @@ export async function createBooking(
   return json as CreateBookingSuccess;
 }
 
+/**
+ * Get a user's bookings (optionally including venue data).
+ *
+ * @param username Profile name
+ * @param token Auth token
+ * @returns Bookings for the user
+ * @throws Error when the request fails
+ */
 export async function getProfileBookings(
   username: string,
   token: string,

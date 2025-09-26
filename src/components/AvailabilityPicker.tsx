@@ -1,8 +1,12 @@
-import type { VenueBooking } from "../types/venue";
 import dayjs, { Dayjs } from "dayjs";
 import { Stack } from "@mui/material";
 import LabeledDatePicker from "./ui/LabeledDatePicker";
+import type { VenueBooking } from "../types/venue";
 
+/**
+ * Is a date inside any existing booking?
+ * Treats bookings like (from, to) at day-level.
+ */
 function isDateInsideAnyBooking(date: Dayjs, bookings: VenueBooking[]) {
   return bookings.some((b) => {
     const from = dayjs(b.dateFrom).startOf("day");
@@ -14,6 +18,9 @@ function isDateInsideAnyBooking(date: Dayjs, bookings: VenueBooking[]) {
   });
 }
 
+/**
+ * Do the chosen dates overlap with any booking?
+ */
 function rangeOverlapsBookings(
   start: Dayjs,
   end: Dayjs,
@@ -28,12 +35,19 @@ function rangeOverlapsBookings(
 }
 
 type Props = {
+  /** Existing bookings for this venue. */
   bookings?: VenueBooking[];
+  /** Selected check-in date. */
   checkIn: Dayjs | null;
+  /** Selected check-out date. */
   checkOut: Dayjs | null;
+  /** Called whenever either date changes. */
   onChange: (next: { checkIn: Dayjs | null; checkOut: Dayjs | null }) => void;
 };
 
+/**
+ * Two date pickers (check-in / check-out) with booking rules.
+ */
 export default function AvailabilityPicker({
   bookings = [],
   checkIn,

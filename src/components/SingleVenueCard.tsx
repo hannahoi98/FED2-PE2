@@ -1,4 +1,7 @@
-import type { Venue } from "../types/venue";
+import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import { Dayjs } from "dayjs";
 import {
   Alert,
   Button,
@@ -13,35 +16,40 @@ import {
   TextField,
   Box,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { COLORS, FONTS } from "../theme";
-import { Dayjs } from "dayjs";
-import AvailabilityPicker from "./AvailabilityPicker";
-import { useState, useMemo } from "react";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import AvailabilityPicker from "./AvailabilityPicker";
 import { createBooking } from "../api/bookings";
-import { Link as RouterLink } from "react-router-dom";
 import { loadAuth } from "../utils/authStorage";
+import { COLORS, FONTS } from "../theme";
+import type { Venue } from "../types/venue";
 
 type Props = {
   venue: Venue;
 };
 
+/**
+ * Full-page card for a venue.
+ * Shows details, availability picker, and a booking box on the right.
+ *
+ * @param props Component props
+ * @returns The venue details and booking UI
+ */
 export default function SingleVenueCard({ venue }: Props) {
   const navigate = useNavigate();
 
   const auth = loadAuth();
   const token = auth?.accessToken ?? "";
 
+  // Roles
   type VenueWithOwner = Venue & { owner?: { name?: string } };
   const ownerName = (venue as VenueWithOwner).owner?.name;
-
   const isAuthenticated = !!auth;
   const isManager = !!auth?.venueManager;
   const isOwner = ownerName === auth?.name;
   const roleAllowsBooking = !isManager || (isManager && !isOwner);
 
+  // Hero image
   const firstImage = venue.media?.[0]?.url ?? " ";
   const firstAlt = venue.media?.[0]?.alt ?? venue.name;
 
@@ -49,6 +57,7 @@ export default function SingleVenueCard({ venue }: Props) {
     .filter(Boolean)
     .join(", ");
 
+  // Form state
   const [checkIn, setCheckIn] = useState<Dayjs | null>(null);
   const [checkOut, setCheckOut] = useState<Dayjs | null>(null);
   const [guests, setGuests] = useState(1);
@@ -66,7 +75,6 @@ export default function SingleVenueCard({ venue }: Props) {
 
   const canSelectDates = Boolean(checkIn && checkOut);
   const canBook = canSelectDates && guests > 0 && guests <= venue.maxGuests;
-
   const canSubmit =
     isAuthenticated && roleAllowsBooking && canBook && !submitting;
 
@@ -174,6 +182,7 @@ export default function SingleVenueCard({ venue }: Props) {
                     "& .MuiRating-iconFilled": { color: COLORS.pine },
                     "& .MuiRating-iconEmpty": { color: "rgba(9,63,59,0.3)" },
                   }}
+                  aria-label={`Rating ${Number(venue.rating).toFixed(1)} out of 5`}
                 />
                 <Typography sx={{ fontFamily: FONTS.sans }}>
                   {venue.rating.toFixed(1)}
@@ -219,7 +228,7 @@ export default function SingleVenueCard({ venue }: Props) {
               </Stack>
             )}
             <Stack>
-              <Typography variant="h6">Ameneties</Typography>
+              <Typography variant="h6">Amenities</Typography>
               <Stack
                 direction={{ xs: "column", sm: "row" }}
                 spacing={{ xs: 1.25, sm: 2 }}

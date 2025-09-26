@@ -1,10 +1,16 @@
-import { Alert } from "@mui/material";
 import { useLocation, useParams } from "react-router-dom";
-import { useVenue } from "../hooks/useVenue";
+import { Alert } from "@mui/material";
 import Loader from "../components/Loader";
-import type { Venue } from "../types/venue";
 import SingleVenueCard from "../components/SingleVenueCard";
+import { useVenue } from "../hooks/useVenue";
+import type { Venue } from "../types/venue";
 
+/**
+ * Page for a single venue.
+ * Tries to use a preloaded venue from navigation state, otherwise fetches by id.
+ *
+ * @returns The venue page or a simple alert for error states
+ */
 export default function SingleVenue() {
   const { id } = useParams<{ id: string }>();
   const preloaded =
