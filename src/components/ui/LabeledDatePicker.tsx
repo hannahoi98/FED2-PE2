@@ -1,23 +1,37 @@
 import type { Dayjs } from "dayjs";
-import { COLORS, FONTS } from "../../theme";
-import { Chip, Stack } from "@mui/material";
+import { Chip, Stack, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { COLORS, FONTS } from "../../theme";
 
 export type LabeledDatePickerProps = {
+  /** Label shown above the input */
   label: string;
+  /** The selected date value (controlled). */
   value: Dayjs | null;
+  /** Changes when the user picks/clears a date. */
   onChange: (v: Dayjs | null) => void;
+  /** The earliest date you can pick. */
   minDate?: Dayjs;
+  /** Optional rule to block certain dates. */
   shouldDisableDate?: (d: Dayjs) => boolean;
+
+  /** Usual form flags. */
   disabled?: boolean;
   readOnly?: boolean;
+
+  /** Input width for component. */
   width?: number;
+
+  /** Placeholder text inside the field. */
   placeholder?: string;
+
+  /** Extra MUI props to pass through */
   slotProps?: {
     textField?: Record<string, unknown>;
   } & Record<string, unknown>;
+
+  /** Display format shown to the user. */
   format?: string;
 };
 
@@ -36,6 +50,13 @@ const OutlinedTF = styled(TextField)({
   "& .MuiSvgIcon-root": { color: COLORS.pine },
 });
 
+/**
+ * Date picker with a small chip label above it.
+ * Styled to match the rest of the app.
+ *
+ * @param props Component props
+ * @returns A labeled date picker
+ */
 export default function LabeledDatePicker({
   label,
   value,
@@ -60,6 +81,7 @@ export default function LabeledDatePicker({
     ...(slotProps ?? {}),
   };
 
+  // Layout with chip on top and field below
   return (
     <Stack spacing={0.5} sx={{ minWidth: width }}>
       <Chip

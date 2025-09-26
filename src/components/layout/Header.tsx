@@ -1,9 +1,8 @@
-import { AppBar, Typography, Toolbar, Box, Button } from "@mui/material";
-import { COLORS } from "../theme";
-import { FONTS } from "../theme";
-import { useNavigate, NavLink } from "react-router-dom";
-import { loadAuth, onAuthChange, clearAuth } from "../utils/authStorage";
 import { useState, useEffect } from "react";
+import { useNavigate, NavLink } from "react-router-dom";
+import { AppBar, Typography, Toolbar, Box, Button } from "@mui/material";
+import { loadAuth, onAuthChange, clearAuth } from "../../utils/authStorage";
+import { COLORS, FONTS } from "../../theme";
 
 const linkSx = {
   fontSize: "1.15rem",
@@ -18,6 +17,9 @@ const linkSx = {
   },
 } as const;
 
+/**
+ * Top applicaton bar with logo and primary navigation
+ */
 export default function Header() {
   const navigate = useNavigate();
   const [auth, setAuth] = useState(loadAuth());
@@ -57,10 +59,15 @@ export default function Header() {
         >
           Holidaze
         </Typography>
-        <Box sx={{ display: { xs: "none", md: "flex" }, gap: 1.5 }}>
+
+        <Box
+          component="nav"
+          sx={{ display: { xs: "none", md: "flex" }, gap: 1.5 }}
+        >
           <Button component={NavLink} to="/" end sx={linkSx}>
             Browse Venues
           </Button>
+
           {!auth ? (
             <>
               <Button component={NavLink} to="/auth/register" sx={linkSx}>

@@ -1,3 +1,5 @@
+import { useState, useEffect, useMemo } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Box, BottomNavigation, BottomNavigationAction } from "@mui/material";
 import {
   TravelExploreSharp,
@@ -5,11 +7,14 @@ import {
   PersonSharp,
   Logout,
 } from "@mui/icons-material";
-import { useLocation, useNavigate } from "react-router-dom";
-import { COLORS } from "../theme";
-import { useState, useEffect, useMemo } from "react";
-import { loadAuth, clearAuth, onAuthChange } from "../utils/authStorage";
+import { loadAuth, clearAuth, onAuthChange } from "../../utils/authStorage";
+import { COLORS } from "../../theme";
 
+/**
+ * Mobile bottom navigation for primary app routes and authentication actions.
+ *
+ * Displays on `xs–sm` viewports; hidden on `md+` where the header handles navigation
+ */
 export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -38,7 +43,6 @@ export default function BottomNav() {
   );
 
   const path = location.pathname;
-
   const value = (() => {
     if (path === "/") {
       return ITEMS.findIndex((it) => it.to === "/");

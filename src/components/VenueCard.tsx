@@ -1,4 +1,4 @@
-import type { Venue } from "../types/venue";
+import { Link as RouterLink } from "react-router-dom";
 import {
   Button,
   Card,
@@ -10,10 +10,16 @@ import {
 } from "@mui/material";
 import Rating from "@mui/material/Rating";
 import { COLORS, FONTS } from "../theme";
-import { Link as RouterLink } from "react-router-dom";
+import type { Venue } from "../types/venue";
 
 type Props = { venue: Venue };
 
+/**
+ * Compact card preview for a venue.
+ *
+ * @param props - component props
+ * @returns card with image, title, rating, meta and a details link
+ */
 export default function VenueCard({ venue }: Props) {
   const firstImage = venue.media?.[0]?.url ?? " ";
   const firstAlt = venue.media?.[0]!.alt ?? venue.name;
@@ -37,7 +43,7 @@ export default function VenueCard({ venue }: Props) {
       />
 
       <CardContent>
-        <Stack spacing={0.5} alignItems="center">
+        <Stack spacing={0.75} alignItems="center">
           <Typography component="h3" variant="h6">
             {venue.name}
           </Typography>
@@ -54,6 +60,7 @@ export default function VenueCard({ venue }: Props) {
                     "& .MuiRating-iconFilled": { color: COLORS.pine },
                     "& .MuiRating-iconEmpty": { color: "rgba(9,63,59,0.3)" },
                   }}
+                  aria-label={`Rating ${venue.rating.toFixed(1)} out of 5`}
                 />
                 <Typography sx={{ fontFamily: FONTS.sans }}>
                   {venue.rating.toFixed(1)}
@@ -64,11 +71,7 @@ export default function VenueCard({ venue }: Props) {
                 No ratings yet
               </Typography>
             )}
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={{ mx: 1, borderColor: COLORS.mint, opacity: 1 }}
-            />
+            <Divider orientation="vertical" flexItem />
             <Typography sx={{ fontFamily: FONTS.sans }}>
               {venue.maxGuests} Guests
             </Typography>
@@ -81,7 +84,6 @@ export default function VenueCard({ venue }: Props) {
             to={`/venues/${venue.id}`}
             variant="elevated"
             color="mint"
-            sx={{ mt: 1 }}
           >
             View venue
           </Button>

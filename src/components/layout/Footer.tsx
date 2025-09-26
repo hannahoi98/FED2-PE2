@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { COLORS } from "../theme";
+import { COLORS } from "../../theme";
 
 export default function Footer() {
   return (

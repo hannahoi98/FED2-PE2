@@ -1,12 +1,13 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, alpha } from "@mui/material/styles";
 
+/** Shared font families */
 export const FONTS = {
   serif: '"DM Serif Display", serif',
   sans: '"DM Sans", system-ui, Arial, sans-serif',
   logo: '"Neonderthaw", cursive',
 };
 
-// Colors
+/** Brand colors */
 export const COLORS = {
   pine: "#093F3B",
   mint: "#C8DEDC",
@@ -15,6 +16,7 @@ export const COLORS = {
   white: "#FFFFFF",
 };
 
+// ——— MUI Module Augmentation ———
 declare module "@mui/material/Button" {
   interface ButtonPropsVariantOverrides {
     elevated: true;
@@ -31,6 +33,7 @@ const theme = createTheme({
     mode: "light",
     primary: { main: COLORS.pine, contrastText: COLORS.page },
     secondary: { main: COLORS.mint, contrastText: COLORS.pine },
+    info: { main: COLORS.mint, contrastText: COLORS.pine },
     background: {
       default: COLORS.page,
       paper: COLORS.white,
@@ -119,6 +122,32 @@ const theme = createTheme({
       },
     },
 
+    MuiAlert: {
+      defaultProps: { variant: "standard" },
+      styleOverrides: {
+        root: { borderRadius: 12, alignItems: "center" },
+        icon: { marginRight: 8 },
+      },
+      variants: [
+        {
+          props: { variant: "standard", severity: "info" },
+          style: {
+            backgroundColor: alpha(COLORS.mint, 0.12),
+            color: COLORS.pine,
+            border: `1px solid ${alpha(COLORS.mint, 0.45)}`,
+          },
+        },
+        {
+          props: { variant: "standard", severity: "error" },
+          style: {
+            backgroundColor: alpha(COLORS.pop, 0.1),
+            color: COLORS.pop,
+            border: `1px solid ${alpha(COLORS.pop, 0.55)}`,
+          },
+        },
+      ],
+    },
+
     MuiButton: {
       styleOverrides: {
         root: {
@@ -134,6 +163,15 @@ const theme = createTheme({
           style: {
             backgroundColor: COLORS.mint,
             color: COLORS.pine,
+            fontFamily: FONTS.sans,
+            boxShadow: "0 4px 10px rgba(142,197,190,.25)",
+            "&:hover": {
+              backgroundColor: "#B6D5D2",
+              boxShadow: "0 6px 18px rgba(142,197,190,.35)",
+            },
+            "&.Mui-focusVisible": {
+              boxShadow: `0 0 0 3px ${alpha(COLORS.mint, 0.45)}`,
+            },
           },
         },
         {
@@ -141,6 +179,15 @@ const theme = createTheme({
           style: {
             backgroundColor: COLORS.pine,
             color: COLORS.page,
+            fontFamily: FONTS.sans,
+            boxShadow: "0 4px 10px rgba(9,63,59,.25)",
+            "&:hover": {
+              backgroundColor: "#073630",
+              boxShadow: "0 6px 18px rgba(9,63,59,.35)",
+            },
+            "&.Mui-focusVisible": {
+              boxShadow: `0 0 0 3px ${alpha(COLORS.pine, 0.35)}`,
+            },
             "&.Mui-disabled": {
               color: COLORS.page,
               opacity: 0.9,
@@ -152,7 +199,16 @@ const theme = createTheme({
           style: {
             backgroundColor: COLORS.white,
             color: COLORS.pine,
+            fontFamily: FONTS.sans,
             border: `1px solid ${COLORS.pine}`,
+            boxShadow: "0 4px 10px rgba(0,0,0,.08)",
+            "&:hover": {
+              backgroundColor: "#F7FAF9",
+              boxShadow: "0 6px 18px rgba(0,0,0,.12)",
+            },
+            "&.Mui-focusVisible": {
+              boxShadow: `0 0 0 3px ${alpha(COLORS.mint, 0.45)}`,
+            },
           },
         },
       ],
