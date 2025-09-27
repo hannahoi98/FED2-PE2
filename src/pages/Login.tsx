@@ -1,3 +1,4 @@
+import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
 import {
   Stack,
   Typography,
@@ -7,17 +8,20 @@ import {
   Box,
   Link,
 } from "@mui/material";
-import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
 import LoginForm from "../components/auth/LoginForm";
 import { COLORS, FONTS } from "../theme";
 
+/**
+ * Login page wrapper with heading and Login Form inside a card.
+ * @returns Login screen
+ */
 export default function Login() {
   const navigate = useNavigate();
   const loc = useLocation() as {
     state?: { prefillEmail?: string; from?: string };
   };
-
   const prefillEmail = loc.state?.prefillEmail;
+  const from = loc.state?.from;
 
   return (
     <Stack
@@ -36,15 +40,18 @@ export default function Login() {
       >
         <CardContent sx={{ p: { xs: 3, sm: 4, md: 6 } }}>
           <Typography component="h1" variant="h4" align="center" sx={{ mb: 1 }}>
-            Login To your account
+            Log in to your account
           </Typography>
+
           <Divider sx={{ opacity: 1, mb: 4 }} />
+
           <LoginForm
             prefillEmail={prefillEmail}
             onSuccess={() => {
-              navigate("/profile", { replace: true });
+              navigate(from || "/profile", { replace: true });
             }}
           />
+
           <Box sx={{ textAlign: "center", mt: { xs: 3, sm: 4, md: 5 } }}>
             <Typography sx={{ fontFamily: FONTS.sans }}>
               {" "}

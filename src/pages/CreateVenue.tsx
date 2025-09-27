@@ -18,13 +18,14 @@ import type { Venue } from "../types/venue";
  * CreateVenuePage
  *
  * Page for creating a new venue.
- * - Guards: requires an authenticated venue manager; otherwise redirects
- *   to /auth/login (no auth) or / (not a manager).
- * - Renders `VenueForm` with empty defaults.
- * - On submit, transforms to API shape with `toCreateVenueData`, calls
- *   `CreateVenue`, and navigates to the newly created venue detail page.
- * - Shows a top-level error alert if creation fails and disables the form
- *   while a request is in flight.
+ * - Guards: if you’re not logged in - go to /auth/login
+ *    If you’re logged in but not a manager - go to home.
+ * - Shows VenueForm with empty defaults.
+ * - On submit we:
+ *   - Convert the form to the API shape (toCreateVenueData)
+ *   - call the create venue API
+ *   - navigate to the venue page after success
+ * If the request fails, an error message is shown and the form is disabled while saving
  */
 export default function CreateVenuePage() {
   const auth = loadAuth();

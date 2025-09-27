@@ -19,13 +19,16 @@ import type { Venue } from "../types/venue";
 /**
  * EditVenuePage
  *
- * Page for editing an existing venue.
- * - Guards: requires an authenticated venue manager; otherwise redirects
- *   to /auth/login (no auth) or / (not a manager).
- * - Fetches the venue by `id` (from route params) and pre-fills the form.
- * - On submit, validates with `toCreateVenueData` and calls `updateVenue`,
- *   then navigates back to the venue detail page.
- * - Displays loader while fetching; shows a top-level error alert on failure.
+ * Lets a venue manager edit an existing venue.
+ * What happens:
+ * - Guarding: if you’re not logged in -> /auth/login.
+ *   If you’re logged in but not a manager -> home.
+ * - Loads the venue by :id from the URL and pre-fills <VenueForm />.
+ * - On submit we:
+ *    - convert the form to the API shape (toCreateVenueData)
+ *    - call the update venue API
+ *    - navigate back to /venues/:id on success
+ * While loading we show a spinner; on errors we show an alert. The form is disabled while saving.
  */
 export default function EditVenuePage() {
   const auth = loadAuth();
@@ -76,6 +79,8 @@ export default function EditVenuePage() {
       navigate(`/venues/${id}`);
     } catch (e: unknown) {
       setServerError(e instanceof Error ? e.message : "Failed to update venue");
+    } finally {
+      setSubmitting(false);
     }
   }
 

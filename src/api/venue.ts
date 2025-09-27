@@ -122,6 +122,15 @@ export async function deleteVenue(id: string, token: string): Promise<void> {
   }
 }
 
+/**
+ * Load all venues owned by a profile, including their bookings.
+ * Used on the manager Profile page.
+ *
+ * @param name   Profile/username.
+ * @param token  Access token.
+ * @returns      Venue list with pagination meta.
+ * @throws       Error with a readable message if the request fails.
+ */
 export async function getProfileVenuesWithBookings(
   name: string,
   token: string,

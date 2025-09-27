@@ -4,18 +4,21 @@ export const usernameRx = /^[A-Za-z0-9_]{3,20}$/;
 export const noroffEmailRx = /^[A-Za-z0-9._%+-]+@stud\.noroff\.no$/i;
 export const passwordRx = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
+/** Username: 3–20 characters, letters/numbers/underscore. */
 export function validateUsername(v: string) {
   if (!v) return "Username is required";
   if (!usernameRx.test(v)) return "3–20 chars, letters/numbers/_ only";
   return "";
 }
 
+/** Email: must be a stud.noroff.no address. */
 export function validateEmail(v: string) {
   if (!v) return "Email is required";
   if (!noroffEmailRx.test(v)) return "Use your stud.noroff.no email";
   return "";
 }
 
+/** Password: at least 8 characters, includes a letter and a number. */
 export function validatePassword(v: string) {
   if (!v) return "Password is required";
   if (!passwordRx.test(v)) return "Min 8 chars, include a letter and a number";
@@ -59,6 +62,10 @@ export const isHttpUrl = (v: string) => /^https?:\/\/\S+/i.test(v.trim());
 const nonEmpty = (s: string) => s.trim().length > 0;
 const positiveInt = (n: number) => Number.isInteger(n) && n > 0;
 
+/**
+ * Validate the venue form and collect messages.
+ * @returns `{ valid, errors }`
+ */
 export function validateVenueForm(form: VenueFormState) {
   const errors: VenueFormErrors = {};
   let valid = true;
@@ -114,6 +121,7 @@ export function validateVenueForm(form: VenueFormState) {
   return { valid, errors };
 }
 
+/** Map the form state to the API’s create-venue data. */
 export function toCreateVenueData(form: VenueFormState): CreateVenueInput {
   return {
     name: form.name.trim(),

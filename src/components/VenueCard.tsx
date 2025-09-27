@@ -44,7 +44,16 @@ export default function VenueCard({ venue }: Props) {
 
       <CardContent>
         <Stack spacing={0.75} alignItems="center">
-          <Typography component="h3" variant="h6">
+          <Typography
+            component="h3"
+            variant="h6"
+            sx={{
+              width: "100%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             {venue.name}
           </Typography>
           <Typography sx={{ fontFamily: FONTS.sans }}>{place}</Typography>

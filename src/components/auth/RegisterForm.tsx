@@ -1,10 +1,3 @@
-import {
-  validateUsername,
-  validateEmail,
-  validatePassword,
-} from "../../utils/validation";
-import { registerUser } from "../../api/auth";
-import type { RegistrationData } from "../../types/auth";
 import { useState } from "react";
 import {
   Alert,
@@ -18,7 +11,13 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
-
+import type { RegistrationData } from "../../types/auth";
+import {
+  validateUsername,
+  validateEmail,
+  validatePassword,
+} from "../../utils/validation";
+import { registerUser } from "../../api/auth";
 import { COLORS, FONTS } from "../../theme";
 
 type FormState = {
@@ -28,6 +27,12 @@ type FormState = {
   role: "customer" | "manager";
 };
 
+/**
+ * Registration form with basic validation.
+ *
+ * @param props Component props
+ * @returns A form that creates an account
+ */
 export default function RegisterForm({
   onSuccess,
 }: {
@@ -54,6 +59,7 @@ export default function RegisterForm({
   const setField = (key: keyof FormState) => (value: string) =>
     setForm((f) => ({ ...f, [key]: value }));
 
+  /** Validate all fields and collect messages. */
   const validateAll = () => {
     const next = {
       name: validateUsername(form.name),
@@ -94,9 +100,10 @@ export default function RegisterForm({
     }
   }
 
+  // Render the form
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
-      <Stack spacing={3} sx={{ fontFamily: FONTS.sans }}>
+      <Stack spacing={3} sx={{ fontFamily: FONTS.sans }} aria-live="polite">
         {serverError && <Alert severity="error">{serverError}</Alert>}
         {serverSuccess && <Alert severity="success">{serverSuccess}</Alert>}
 
@@ -110,7 +117,8 @@ export default function RegisterForm({
           }
           error={Boolean(errors.name)}
           helperText={
-            errors.name || "3 to 20 characters, letters, numbers and _ accepted"
+            errors.name ||
+            "3 to 20 characters; letters, numbers and _ are accepted"
           }
           autoComplete="username"
           required

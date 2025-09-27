@@ -1,6 +1,7 @@
 import { PROFILE_URL, withQuery, buildHeaders } from "./endpoints";
 import type { ApiErrorResponse, UpdateProfileInput } from "../types/auth";
 
+/** Shape of the profile data the API returns . */
 export type ProfileResponse = {
   data: {
     name: string;
@@ -13,6 +14,15 @@ export type ProfileResponse = {
   meta: Record<string, unknown>;
 };
 
+/**
+ * Get one user profile by username.
+ * You can ask the API to include venues and/or bookings with `_venues` / `_bookings`.
+ *
+ * @param username  Profile/username
+ * @param token     Access token.
+ * @param opts      Optional flags to include venues and/or bookings.
+ * @returns         ProfileResponse with `data` and `meta`.
+ */
 export async function getProfile(
   username: string,
   token: string,
@@ -39,6 +49,14 @@ export async function getProfile(
   return json as ProfileResponse;
 }
 
+/**
+ * Update profile details (we use it for avatar).
+ *
+ * @param username  Profile/username.
+ * @param token     Access token.
+ * @param data      Partial profile fields (e.g., `{ avatar: { url, alt } }`).
+ * @returns         Updated ProfileResponse.
+ */
 export async function UpdateProfileInput(
   username: string,
   token: string,

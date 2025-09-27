@@ -1,14 +1,27 @@
 import { useState, useEffect } from "react";
+import { Alert, Box, Button, Stack, TextField } from "@mui/material";
 import { UpdateProfileInput } from "../../api/profile";
 import type { ProfileResponse } from "../../api/profile";
-import { Alert, Box, Button, Stack, TextField } from "@mui/material";
 
+/**
+ * Small form for changing the user's avatar.
+ *
+ * - Shows a preview when the URL looks valid
+ * - Disables the button until something actually changed
+ * - Returns the updated profile via onSuccess
+ */
 type Props = {
+  /** Username to update (owner of the profile). */
   username: string;
+  /** Bearer token for the request. */
   token: string;
+  /** Current avatar URL, used to prefill the form. */
   initialUrl?: string;
+  /** Current avatar alt text, used to prefill the form. */
   initialAlt?: string;
+  /** Called when the user wants to close the form. */
   onClose: () => void;
+  /** Called after a successful save with the updated profile. */
   onSuccess: (updated: ProfileResponse) => void;
 };
 

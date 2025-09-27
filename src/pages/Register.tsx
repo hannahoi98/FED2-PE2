@@ -1,3 +1,4 @@
+import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
 import {
   Box,
   Card,
@@ -7,10 +8,15 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
 import RegisterForm from "../components/auth/RegisterForm";
 import { COLORS, FONTS } from "../theme";
 
+/**
+ * Register page wrapper.
+ * Shows a heading and the Register Form inside a card.
+ *
+ * @returns Register page
+ */
 export default function Register() {
   const navigate = useNavigate();
   const from = (useLocation().state as { from?: string } | null)?.from;

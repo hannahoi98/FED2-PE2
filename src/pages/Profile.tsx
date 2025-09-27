@@ -1,10 +1,6 @@
-import { loadAuth } from "../utils/authStorage";
 import { useEffect, useState } from "react";
-import { getProfile } from "../api/profile";
 import { useNavigate, Navigate } from "react-router-dom";
-import Loader from "../components/Loader";
-import type { Booking } from "../types/bookings";
-import { Add } from "@mui/icons-material";
+import { loadAuth } from "../utils/authStorage";
 import {
   Alert,
   Avatar,
@@ -17,17 +13,30 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
+import { Add } from "@mui/icons-material";
+import Loader from "../components/Loader";
+import EditAvatar from "../components/profile/EditAvatar";
 import BookingCard from "../components/profile/BookingItem";
+import ManagerVenueCard from "../components/venue/ManagerVenueCard";
 import ManagerVenueBookings from "../components/venue/ManagerVenueBookings";
 import { getProfileBookings } from "../api/bookings";
-import EditAvatar from "../components/profile/EditAvatar";
-import ManagerVenueCard from "../components/venue/ManagerVenueCard";
 import { getProfileVenuesWithBookings } from "../api/venue";
+import { getProfile } from "../api/profile";
 import { venuesToManagerRows } from "../utils/managerBookings";
+import { COLORS, FONTS } from "../theme";
+import type { Booking } from "../types/bookings";
 import type { ManagerVenueBookingRow } from "../components/venue/ManagerVenueBookings";
 import type { Venue } from "../types/venue";
-import { COLORS, FONTS } from "../theme";
 
+/**
+ * Profile page.
+ * - Loads the logged-in user's profile
+ * - Shows avatar + name
+ * - Tabs for Venue Manager: "Your Venues" and "Your Bookings"
+ * - Regular users: shows "Your bookings"
+ *
+ * @returns Profile screen (or a redirect to login if not authenticated)
+ */
 export default function Profile() {
   const auth = loadAuth();
 
@@ -35,27 +44,33 @@ export default function Profile() {
   const token = auth?.accessToken;
   const isManager = auth?.venueManager;
 
+  // Profile Basics
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [profile, setProfile] = useState<Awaited<
     ReturnType<typeof getProfile>
   > | null>(null);
 
+  // User bookings
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [bookingsLoading, setBookingsLoading] = useState(true);
   const [bookingsError, setBookingsError] = useState<string | null>(null);
 
+  // Avatar editor
   const [editingAvatar, setEditingAvatar] = useState(false);
 
+  // Tabs (for managers onlye)
   const [tab, setTab] = useState(0);
   const handleTabChange = (_: unknown, newVal: number) => setTab(newVal);
 
+  // Manager: venues + per-venue bookings overview
   const [mvbLoading, setMvbLoading] = useState(false);
   const [mvbError, setMvbError] = useState<string | null>(null);
   const [mvbRows, setMvbRows] = useState<ManagerVenueBookingRow[]>([]);
 
   const navigate = useNavigate();
 
+  // Load profile
   useEffect(() => {
     if (!name || !token) return;
     (async () => {
@@ -74,6 +89,7 @@ export default function Profile() {
     })();
   }, [name, token, isManager]);
 
+  // Load user bookings
   useEffect(() => {
     if (!name || !token) return;
     (async () => {
@@ -91,6 +107,7 @@ export default function Profile() {
     })();
   }, [name, token]);
 
+  // Load manager venues + flatten to rows
   useEffect(() => {
     if (!isManager || !name || !token) return;
     (async () => {
@@ -110,8 +127,10 @@ export default function Profile() {
     })();
   }, [isManager, name, token]);
 
+  // If not logged in - go to log in page
   if (!auth) return <Navigate to="/auth/login" replace />;
 
+  // Render the profile page
   return (
     <Card>
       <CardContent sx={{ p: { xs: 2, sm: 4, md: 5 } }}>
@@ -132,16 +151,29 @@ export default function Profile() {
                   borderRadius: 2,
                 }}
               />
-              <Typography variant="h4">{profile?.data.name}</Typography>
 
+              <Typography
+                component="h1"
+                variant="h4"
+                sx={{
+                  overflowWrap: "anywhere",
+                  wordBreak: "break-word",
+                  hyphens: "auto",
+                  maxWidth: "100%",
+                  fontSize: { xs: 24, sm: 28, md: "inherit" },
+                }}
+              >
+                {profile?.data.name}
+              </Typography>
               <Button
                 variant="elevated"
-                color={editingAvatar ? "white" : "pine"}
+                color="white"
                 onClick={() => setEditingAvatar((v) => !v)}
                 aria-expanded={editingAvatar}
                 aria-controls="edit-avatar-panel"
+                sx={{ width: 240 }}
               >
-                {editingAvatar ? "Close avatar form" : "Update avatar"}
+                {editingAvatar ? "Cancel" : "Update picture"}
               </Button>
 
               {editingAvatar && name && token && profile && (
@@ -160,6 +192,7 @@ export default function Profile() {
                 </Box>
               )}
             </Stack>
+
             {isManager ? (
               <Box
                 sx={{
@@ -183,6 +216,7 @@ export default function Profile() {
                     <Button
                       variant="elevated"
                       color="pine"
+                      size="medium"
                       startIcon={<Add />}
                       onClick={() => navigate("/venues/new")}
                       sx={{ width: { xs: "100%", sm: "auto" }, mb: 1 }}
@@ -244,6 +278,7 @@ export default function Profile() {
                 </Typography>
               </Box>
             )}
+
             {isManager && tab === 0 && (
               <>
                 <Box

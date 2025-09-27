@@ -1,13 +1,15 @@
 import { useState } from "react";
+import { Alert, Box, Button, Stack, TextField } from "@mui/material";
+import { loginUser } from "../../api/auth";
 import { saveAuth } from "../../utils/authStorage";
 import { validateEmail, validatePassword } from "../../utils/validation";
-import { loginUser } from "../../api/auth";
-import type { AuthUser } from "../../types/auth";
 import { FONTS } from "../../theme";
-import { Alert, Box, Button, Stack, TextField } from "@mui/material";
+import type { AuthUser } from "../../types/auth";
 
 type Props = {
+  /** Optional email to prefill */
   prefillEmail?: string;
+  /** Called after successful login with the saved user. */
   onSuccess?: (user: AuthUser) => void;
 };
 
@@ -17,6 +19,12 @@ type FormState = {
   remember: boolean;
 };
 
+/**
+ * Simple login form with basic validation.
+ *
+ * @param props Component props
+ * @returns A form that logs the user in
+ */
 export default function LoginForm({ prefillEmail, onSuccess }: Props) {
   const [form, setForm] = useState<FormState>({
     email: prefillEmail ?? "",
@@ -36,6 +44,7 @@ export default function LoginForm({ prefillEmail, onSuccess }: Props) {
   const setField = (key: keyof FormState) => (value: string | boolean) =>
     setForm((f) => ({ ...f, [key]: value }) as FormState);
 
+  /** Validate fields and collect messages. */
   const validateAll = () => {
     const next = {
       email: validateEmail(form.email),
@@ -68,9 +77,10 @@ export default function LoginForm({ prefillEmail, onSuccess }: Props) {
     }
   }
 
+  // Render login form
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
-      <Stack spacing={3} sx={{ fontFamily: FONTS.sans }}>
+      <Stack spacing={3} sx={{ fontFamily: FONTS.sans }} aria-live="polite">
         {serverError && <Alert severity="error">{serverError}</Alert>}
 
         <TextField

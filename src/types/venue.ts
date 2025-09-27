@@ -1,10 +1,12 @@
 // Types for venue data from the API
 
+/** One image for a venue. */
 export type VenueMedia = {
   url: string;
   alt?: string;
 };
 
+/** Optional amenities/features for a venue. */
 export type VenueMeta = {
   wifi: boolean;
   parking: boolean;
@@ -12,6 +14,7 @@ export type VenueMeta = {
   pets: boolean;
 };
 
+/** Optional address info. lat/lng are plain numbers (not strings). */
 export type VenueLocation = {
   address?: string;
   city?: string;
@@ -22,6 +25,7 @@ export type VenueLocation = {
   lng?: number;
 };
 
+/** Basic info about the customer who booked. */
 export type BookingCustomer = {
   name: string;
   email: string;
@@ -30,6 +34,7 @@ export type BookingCustomer = {
   bio?: string;
 };
 
+/** One booking on a venue. Dates are ISO strings. */
 export type VenueBooking = {
   id: string;
   dateFrom: string;
@@ -40,12 +45,14 @@ export type VenueBooking = {
   customer?: BookingCustomer;
 };
 
+/** Basic info about the venue owner/manager. */
 export type VenueOwner = {
   name: string;
   email?: string;
   avatar?: { url?: string; alt?: string } | null;
 };
 
+/** The main venue object we get from the API. */
 export type Venue = {
   id: string;
   name: string;
@@ -62,6 +69,7 @@ export type Venue = {
   owner?: VenueOwner | null;
 };
 
+/** Paged list response when fetching many venues. */
 export type VenueListResponse = {
   data: Venue[];
   meta: {

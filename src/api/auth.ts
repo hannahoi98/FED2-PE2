@@ -3,7 +3,6 @@ import {
   buildHeaders,
   LOGIN_URL_WITH_HOLIDAZE,
 } from "./endpoints";
-
 import type {
   RegistrationData,
   RegisterSuccess,
@@ -12,6 +11,13 @@ import type {
   LoginSuccess,
 } from "../types/auth";
 
+/**
+ * Register a new user.
+ *
+ * @param registration Data for the new account
+ * @returns Server response on success
+ * @throws Error with a readable message on failure
+ */
 export async function registerUser(
   registration: RegistrationData,
 ): Promise<RegisterSuccess> {
@@ -33,6 +39,14 @@ export async function registerUser(
   return json as RegisterSuccess;
 }
 
+/**
+ * Log a user in.
+ *
+ * @param credentials Email + password
+ * @param opts Set `holidaze: true` to use the Holidaze login endpoint (default)
+ * @returns Login data with access token
+ * @throws Error with a readable message on failure
+ */
 export async function loginUser(
   credentials: LoginCredentials,
   opts: { holidaze?: boolean } = { holidaze: true },

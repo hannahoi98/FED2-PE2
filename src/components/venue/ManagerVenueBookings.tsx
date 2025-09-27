@@ -1,9 +1,9 @@
-import dayjs from "dayjs";
 import { useMemo } from "react";
+import dayjs from "dayjs";
 import { Alert, Divider, Stack, Box, Typography } from "@mui/material";
-import type { Venue, VenueBooking } from "../../types/venue";
 import Loader from "../Loader";
 import { COLORS, FONTS } from "../../theme";
+import type { Venue, VenueBooking } from "../../types/venue";
 
 export type ManagerVenueBookingRow = {
   venue: Venue;
@@ -11,18 +11,24 @@ export type ManagerVenueBookingRow = {
 };
 
 type Props = {
+  /** Flattened list of (venue, booking) rows. */
   rows: ManagerVenueBookingRow[];
   loading: boolean;
   error: string | null;
+  /** Optional title above the list. */
   title?: string;
 };
 
+/**
+ * Manager view: upcoming bookings across all of your venues.
+ */
 export default function ManagerVenueBookings({
   rows,
   loading,
   error,
   title = "Bookings on Your Venues",
 }: Props) {
+  // Only show bookings that are still in the future; sort by start date
   const visibleRows = useMemo(() => {
     return rows
       .filter(({ booking }) => dayjs(booking.dateTo).isAfter(dayjs()))
@@ -74,6 +80,7 @@ function BookingRow({
     to.startOf("day").diff(from.startOf("day"), "day"),
   );
   const total = (venue.price ?? 0) * nights;
+
   const guestName =
     booking.customer?.name ?? booking.customer?.email ?? "Guest";
 
@@ -85,6 +92,7 @@ function BookingRow({
         alignItems: { xs: "stretch", sm: "center" },
         gap: { xs: 1, sm: 2 },
         border: `1px solid ${COLORS.mint}`,
+        boxShadow: "0 2px 8px rgba(9,63,59,0.08)",
         overflow: "hidden",
         p: { xs: 0, sm: 1.5 },
         borderRadius: 2,
@@ -101,6 +109,7 @@ function BookingRow({
           objectFit: "cover",
         }}
       />
+
       <Box sx={{ px: { xs: 1.5, sm: 0 }, py: { xs: 1.25, sm: 0 } }}>
         <Typography sx={{ fontSize: 18 }}>{venue.name}</Typography>
         <Typography fontFamily={FONTS.sans}>

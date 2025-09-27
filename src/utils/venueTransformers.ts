@@ -1,6 +1,13 @@
 import type { Venue } from "../types/venue";
 import type { VenueFormState } from "./validation";
 
+/**
+ * Map a `Venue` from the API into the shape our form expects.
+ * (Mostly fills in empty strings and normalizes booleans.)
+ *
+ * @param venue - Venue object from the API.
+ * @returns A `VenueFormState` object you can pass to <VenueForm initialValues={...} />
+ */
 export function toVenueFormState(venue: Venue): VenueFormState {
   return {
     name: venue.name ?? "",

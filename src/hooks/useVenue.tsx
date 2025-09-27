@@ -1,9 +1,29 @@
-import type { Venue } from "../types/venue";
-import { SINGLE_VENUE_URL, withQuery } from "../api/endpoints";
 import { useState, useEffect } from "react";
+import { SINGLE_VENUE_URL, withQuery } from "../api/endpoints";
+import type { Venue } from "../types/venue";
 
+/** API response for GET /venues/:id (single venue). */
 type SingleVenueResponse = { data: Venue };
 
+/**
+ * useVenue
+ *
+ * Loads one venue by id and exposes simple state for the page.
+ *
+ * How it works (short):
+ * - If you pass a `preloaded` venue (e.g. from the list page), we show that
+ *   immediately and skip the initial loading spinner.
+ * - If no preloaded venue is given, we fetch it by `id` (including _owner and _bookings).
+ * - We handle errors and a basic "cancelled" flag to avoid setting state after unmount.
+ *
+ * @param id - The venue id from the URL (e.g. "id123"). If missing, nothing is fetched.
+ * @param preloaded - Optional venue object already fetched earlier (for faster first paint).
+ *
+ * @returns {{ venue: Venue | null, loading: boolean, error: string | null }}
+ *   - `venue`: the loaded venue, or `null` while loading / if not found.
+ *   - `loading`: `true` while we’re fetching data.
+ *   - `error`: a short error message if something went wrong, otherwise `null`.
+ */
 export function useVenue(id: string | undefined, preloaded?: Venue | null) {
   const [venue, setVenue] = useState<Venue | null>(preloaded ?? null);
   const [loading, setLoading] = useState(!preloaded);
