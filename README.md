@@ -1,6 +1,6 @@
-# Holidaze - Accommodation Booking
-
+# 🌏Holidaze - Accommodation Booking
 This repository is my submission for the **Project Exam 2**, marking the end of my second year in the **Front-End Development** program at **Noroff School of Technology and Digital Media**.
+<img width="1470" height="757" alt="image" src="https://github.com/user-attachments/assets/ec88c060-7797-446b-9a46-3c4760196169" />
 
 Holidaze is a modern accommodation booking app where visitors can browse venues, customers can book stays, and venue managers can create and manage their venues and bookings. The UI is built with React + TypeScript and MUI, and integrates with the API.
 
@@ -8,7 +8,7 @@ Holidaze is a modern accommodation booking app where visitors can browse venues,
 - Repository:
 - API:
 
-## Features (User Stories)
+## 💫 Features (User Stories)
 
 All Users (visitors)
 
@@ -32,7 +32,7 @@ Venue Managers
 - View upcoming bookings for their venues
 - Update avatar/profile picture
 
-## Tech Stack
+## 🚀 Tech Stack
 
 - React + TypeScript(Vite)
 - MUI
@@ -41,7 +41,7 @@ Venue Managers
 - ESLint + Prettier (+ Husky pre-commit hook)
 - Deployed on Netlify
 
-## How to Install & Run
+## 👩🏽‍💻How to Install & Run
 
 1. Clone the repository
    (Use the green **Code** button on GitHub and clone with HTTPS/SSH.)
