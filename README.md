@@ -1,12 +1,10 @@
 # 🌏Holidaze - Accommodation Booking
-This repository is my submission for the **Project Exam 2**, marking the end of my second year in the **Front-End Development** program at **Noroff School of Technology and Digital Media**.
 <img width="1470" height="757" alt="image" src="https://github.com/user-attachments/assets/ec88c060-7797-446b-9a46-3c4760196169" />
+This repository is my submission for the **Project Exam 2**, marking the end of my second year in the **Front-End Development** program at **Noroff School of Technology and Digital Media**.
+Holidaze is a modern accommodation booking app where visitors can browse venues, customers can book stays, and venue managers can create and manage their venues and bookings. The UI is built with React + TypeScript and MUI, and integrates with the Noroff API.
 
-Holidaze is a modern accommodation booking app where visitors can browse venues, customers can book stays, and venue managers can create and manage their venues and bookings. The UI is built with React + TypeScript and MUI, and integrates with the API.
+- Live website: https://hannahoi98-fed2-pe2.netlify.app/
 
-- Live website:
-- Repository:
-- API:
 
 ## 💫 Features (User Stories)
 
