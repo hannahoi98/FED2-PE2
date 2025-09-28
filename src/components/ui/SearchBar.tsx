@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { TextField, InputAdornment } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import { COLORS } from "../theme";
+import { COLORS } from "../../theme";
 
 type Props = {
   /** What the user has typed. (Controlled by the parent) */

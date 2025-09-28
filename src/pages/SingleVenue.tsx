@@ -1,7 +1,7 @@
 import { useLocation, useParams } from "react-router-dom";
 import { Alert } from "@mui/material";
-import Loader from "../components/Loader";
-import SingleVenueCard from "../components/SingleVenueCard";
+import Loader from "../components/ui/Loader";
+import SingleVenueCard from "../components/venue/detail/SingleVenueCard";
 import { useVenue } from "../hooks/useVenue";
 import type { Venue } from "../types/venue";
 

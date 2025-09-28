@@ -1,8 +1,8 @@
 import { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import AllVenuesGrid from "../components/AllVenuesGrid";
-import SearchBar from "../components/SearchBar";
+import AllVenuesGrid from "../components/venue/browse/AllVenuesGrid";
+import SearchBar from "../components/ui/SearchBar";
 import LabeledDatePicker from "../components/ui/LabeledDatePicker";
 import { COLORS } from "../theme";
 

@@ -33,7 +33,7 @@ const theme = createTheme({
     mode: "light",
     primary: { main: COLORS.pine, contrastText: COLORS.page },
     secondary: { main: COLORS.mint, contrastText: COLORS.pine },
-    info: { main: COLORS.mint, contrastText: COLORS.pine },
+    info: { main: COLORS.mint, contrastText: "#000" },
     background: {
       default: COLORS.page,
       paper: COLORS.white,
@@ -118,6 +118,7 @@ const theme = createTheme({
           marginLeft: 0,
           fontFamily: '"DM Sans", system-ui, Arial, sans-serif',
           color: COLORS.pine,
+          "&.Mui-error": { color: COLORS.pine },
         },
       },
     },
@@ -132,17 +133,19 @@ const theme = createTheme({
         {
           props: { variant: "standard", severity: "info" },
           style: {
-            backgroundColor: alpha(COLORS.mint, 0.12),
-            color: COLORS.pine,
-            border: `1px solid ${alpha(COLORS.mint, 0.45)}`,
+            backgroundColor: alpha(COLORS.mint, 0.02),
+            color: "#000",
+            fontFamily: FONTS.sans,
+            border: `1px solid ${alpha(COLORS.mint, 0.9)}`,
           },
         },
         {
           props: { variant: "standard", severity: "error" },
           style: {
-            backgroundColor: alpha(COLORS.pop, 0.1),
-            color: COLORS.pop,
-            border: `1px solid ${alpha(COLORS.pop, 0.55)}`,
+            backgroundColor: alpha(COLORS.pop, 0.02),
+            color: "#000",
+            fontFamily: FONTS.sans,
+            border: `1px solid ${alpha(COLORS.pop, 0.9)}`,
           },
         },
       ],

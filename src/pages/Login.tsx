@@ -43,7 +43,7 @@ export default function Login() {
             Log in to your account
           </Typography>
 
-          <Divider sx={{ opacity: 1, mb: 4 }} />
+          <Divider sx={{ mb: 4 }} />
 
           <LoginForm
             prefillEmail={prefillEmail}

@@ -18,11 +18,11 @@ import {
 } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import AvailabilityPicker from "./AvailabilityPicker";
-import { createBooking } from "../api/bookings";
-import { loadAuth } from "../utils/authStorage";
-import { COLORS, FONTS } from "../theme";
-import type { Venue } from "../types/venue";
+import AvailabilityPicker from "../../ui/AvailabilityPicker";
+import { createBooking } from "../../../api/bookings";
+import { loadAuth } from "../../../utils/authStorage";
+import { COLORS, FONTS } from "../../../theme";
+import type { Venue } from "../../../types/venue";
 
 type Props = {
   venue: Venue;
@@ -165,7 +165,7 @@ export default function SingleVenueCard({ venue }: Props) {
           </Typography>
 
           {place && (
-            <Typography variant="h6" sx={{ opacity: 0.75 }}>
+            <Typography variant="h6" sx={{ opacity: 0.9 }}>
               {place}
             </Typography>
           )}

@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import dayjs from "dayjs";
 import { Alert, Divider, Stack, Box, Typography } from "@mui/material";
-import Loader from "../Loader";
-import { COLORS, FONTS } from "../../theme";
-import type { Venue, VenueBooking } from "../../types/venue";
+import Loader from "../../ui/Loader";
+import { COLORS, FONTS } from "../../../theme";
+import type { Venue, VenueBooking } from "../../../types/venue";
 
 export type ManagerVenueBookingRow = {
   venue: Venue;

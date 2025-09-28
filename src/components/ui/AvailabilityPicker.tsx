@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
 import { Stack } from "@mui/material";
-import LabeledDatePicker from "./ui/LabeledDatePicker";
-import type { VenueBooking } from "../types/venue";
+import LabeledDatePicker from "./LabeledDatePicker";
+import type { VenueBooking } from "../../types/venue";
 
 /**
  * Is a date inside any existing booking?

@@ -94,7 +94,11 @@ export default function BookingCard({ booking }: Props) {
           >
             {v.name}
           </Typography>
-          {place && <Typography sx={{ opacity: 0.9 }}>{place}</Typography>}
+          {place && (
+            <Typography sx={{ opacity: 0.9, textAlign: "center" }}>
+              {place}
+            </Typography>
+          )}
         </Stack>
 
         <Stack spacing={0.5} sx={{ mt: 1.75 }}>

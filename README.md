@@ -1,69 +1,58 @@
-# React + TypeScript + Vite
+# Holidaze - Accommodation Booking
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository is my submission for the **Project Exam 2**, marking the end of my second year in the **Front-End Development** program at **Noroff School of Technology and Digital Media**.
 
-Currently, two official plugins are available:
+Holidaze is a modern accommodation booking app where visitors can browse venues, customers can book stays, and venue managers can create and manage their venues and bookings. The UI is built with React + TypeScript and MUI, and integrates with the API.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Live website:
+- Repository:
+- API:
 
-## Expanding the ESLint configuration
+## Features (User Stories)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+All Users (visitors)
 
-```js
-export default tseslint.config([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+- View a list of venues
+- Search for venues
+- View a single venue by ID
+- See calendar with available/booked dates
+- Register as Customer or Venue Manager (with a stud.noroff.no email)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+Customers
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+- Log in and log out
+- Create a booking
+- View upcoming bookings
+- Update avatar/profile picture
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Venue Managers
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+- Log in and log out
+- Create, edit and delete a venue
+- View upcoming bookings for their venues
+- Update avatar/profile picture
 
-export default tseslint.config([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+## Tech Stack
+
+- React + TypeScript(Vite)
+- MUI
+- MUI X Date Pickers + dayjs
+- MUI Icons
+- ESLint + Prettier (+ Husky pre-commit hook)
+- Deployed on Netlify
+
+## How to Install & Run
+
+1. Clone the repository
+   (Use the green **Code** button on GitHub and clone with HTTPS/SSH.)
+
+2. Open the terminal **in the project folder**
+
+3. Install dependencies
+   `npm install`
+
+4. Start the development server
+   `npm run dev`
+
+5. Optional: Build for production
+   `npm run build`

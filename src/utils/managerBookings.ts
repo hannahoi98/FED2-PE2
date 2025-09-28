@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import type { Venue } from "../types/venue";
-import type { ManagerVenueBookingRow } from "../components/venue/ManagerVenueBookings";
+import type { ManagerVenueBookingRow } from "../components/profile/manager/ManagerVenueBookings";
 
 /**
  * Turn a manager's venues (with bookings) into flat rows for the UI.

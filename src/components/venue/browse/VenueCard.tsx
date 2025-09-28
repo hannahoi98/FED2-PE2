@@ -9,8 +9,8 @@ import {
   Typography,
 } from "@mui/material";
 import Rating from "@mui/material/Rating";
-import { COLORS, FONTS } from "../theme";
-import type { Venue } from "../types/venue";
+import { COLORS, FONTS } from "../../../theme";
+import type { Venue } from "../../../types/venue";
 
 type Props = { venue: Venue };
 
@@ -45,8 +45,9 @@ export default function VenueCard({ venue }: Props) {
       <CardContent>
         <Stack spacing={0.75} alignItems="center">
           <Typography
-            component="h3"
+            component="h2"
             variant="h6"
+            textAlign="center"
             sx={{
               width: "100%",
               overflow: "hidden",
@@ -56,7 +57,7 @@ export default function VenueCard({ venue }: Props) {
           >
             {venue.name}
           </Typography>
-          <Typography sx={{ fontFamily: FONTS.sans }}>{place}</Typography>
+          <Typography sx={{ opacity: 0.9 }}>{place}</Typography>
           <Stack direction="row" spacing={1}>
             {venue.rating > 0 ? (
               <>

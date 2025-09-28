@@ -12,8 +12,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { validateVenueForm } from "../../utils/validation";
-import type { VenueFormState, VenueFormErrors } from "../../utils/validation";
+import { validateVenueForm } from "../../../utils/validation";
+import { COLORS, FONTS } from "../../../theme";
+import type {
+  VenueFormState,
+  VenueFormErrors,
+} from "../../../utils/validation";
 
 /** Props for VenueForm. */
 type Props = {
@@ -117,7 +121,7 @@ export default function VenueForm({
 
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
-      <Stack spacing={3}>
+      <Stack spacing={3} sx={{ fontFamily: FONTS.sans }} aria-live="polite">
         {(clientError || serverError) && (
           <Alert severity="error">{clientError || serverError}</Alert>
         )}
@@ -193,7 +197,7 @@ export default function VenueForm({
             color="mint"
             onClick={addMedia}
             disabled={submitting}
-            sx={{ alignSelf: "flex-start", width: 150 }}
+            sx={{ alignSelf: "flex-start", width: 160 }}
           >
             Add another image
           </Button>
@@ -226,7 +230,15 @@ export default function VenueForm({
           <Typography variant="h6">Amenities</Typography>
           {(["wifi", "parking", "breakfast", "pets"] as const).map((key) => (
             <FormControl key={key}>
-              <FormLabel sx={{ textTransform: "capitalize" }}>{key}</FormLabel>
+              <FormLabel
+                sx={{
+                  textTransform: "capitalize",
+                  color: COLORS.pine,
+                  opacity: 0.9,
+                }}
+              >
+                {key}
+              </FormLabel>
               <RadioGroup
                 row
                 value={form.meta[key] ? "yes" : "no"}

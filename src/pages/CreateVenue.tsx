@@ -8,7 +8,7 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
-import VenueForm from "../components/venue//VenueForm";
+import VenueForm from "../components/venue/form/VenueForm";
 import { loadAuth } from "../utils/authStorage";
 import { CreateVenue as createVenueApi } from "../api/venue";
 import { toCreateVenueData, type VenueFormState } from "../utils/validation";

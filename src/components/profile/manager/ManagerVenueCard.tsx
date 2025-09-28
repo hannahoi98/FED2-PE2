@@ -10,9 +10,9 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { deleteVenue } from "../../api/venue";
-import { COLORS } from "../../theme";
-import type { Venue } from "../../types/venue";
+import { deleteVenue } from "../../../api/venue";
+import { COLORS } from "../../../theme";
+import type { Venue } from "../../../types/venue";
 
 type Props = {
   venue: Venue;

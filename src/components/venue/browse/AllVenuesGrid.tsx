@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Dayjs } from "dayjs";
 import { Alert, Box, Button, Stack } from "@mui/material";
-import Loader from "./Loader";
+import Loader from "../../ui/Loader";
 import VenueCard from "./VenueCard";
-import { ALL_VENUES_URL } from "../api/endpoints";
-import type { Venue, VenueListResponse } from "../types/venue";
+import { ALL_VENUES_URL } from "../../../api/endpoints";
+import type { Venue, VenueListResponse } from "../../../types/venue";
 
 /**
  * Props for AllVenuesGrid.

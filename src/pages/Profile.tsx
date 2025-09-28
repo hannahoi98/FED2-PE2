@@ -14,18 +14,18 @@ import {
   Typography,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import Loader from "../components/Loader";
+import Loader from "../components/ui/Loader";
 import EditAvatar from "../components/profile/EditAvatar";
 import BookingCard from "../components/profile/BookingItem";
-import ManagerVenueCard from "../components/venue/ManagerVenueCard";
-import ManagerVenueBookings from "../components/venue/ManagerVenueBookings";
+import ManagerVenueCard from "../components/profile/manager/ManagerVenueCard";
+import ManagerVenueBookings from "../components/profile/manager/ManagerVenueBookings";
 import { getProfileBookings } from "../api/bookings";
 import { getProfileVenuesWithBookings } from "../api/venue";
 import { getProfile } from "../api/profile";
 import { venuesToManagerRows } from "../utils/managerBookings";
 import { COLORS, FONTS } from "../theme";
 import type { Booking } from "../types/bookings";
-import type { ManagerVenueBookingRow } from "../components/venue/ManagerVenueBookings";
+import type { ManagerVenueBookingRow } from "../components/profile/manager/ManagerVenueBookings";
 import type { Venue } from "../types/venue";
 
 /**
